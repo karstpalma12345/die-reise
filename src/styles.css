@@ -39,3 +39,6 @@ h2{margin:6px 0}h3{margin:8px 0 0}.q{font-size:1.25rem;margin:0 0 12px}
 details{margin-top:8px}summary{font-weight:600}.stat.big{padding:20px 40px}.stat.big b{font-size:2.4rem}
 .chip.on,.primary:disabled{opacity:.6}
 .wrongs{text-align:left;width:100%;display:flex;flex-direction:column;gap:12px}.wr{display:flex;flex-direction:column;gap:2px;padding-top:10px;border-top:1px solid color-mix(in srgb,var(--ink) 15%,transparent)}.wr span{font-size:.92rem}
+.ans{min-height:56px;display:flex;flex-wrap:wrap;gap:8px;padding:10px;border-radius:16px;border:2px dashed var(--frog);margin-bottom:12px;align-items:center}
+.bank{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.tok{font:inherit;font-size:1.05rem;background:var(--water);color:var(--ink);border:2px solid color-mix(in srgb,var(--ink) 25%,transparent);border-radius:14px;padding:10px 14px;min-height:46px}

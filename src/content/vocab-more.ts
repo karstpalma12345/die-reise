@@ -88,4 +88,17 @@ export const MORE: MoreRow[] = [
     ['Deutsch', 'Duits', 'p', '', 'Karst lernt Deutsch.', 'Karst leert Duits.'], ['Sprache', 'taal', 'die', 'Sprachen', 'Deutsch ist eine Sprache.', 'Duits is een taal.'], ['Wort', 'woord', 'das', 'Wörter', 'Das Wort ist neu.', 'Het woord is nieuw.'],
     ['Satz', 'zin', 'der', 'Sätze', 'Der Satz ist kurz.', 'De zin is kort.'], ['Frage', 'vraag', 'die', 'Fragen', 'Ich habe eine Frage.', 'Ik heb een vraag.'], ['Antwort', 'antwoord', 'die', 'Antworten', 'Die Antwort ist richtig.', 'Het antwoord is juist.'],
     ['Hilfe', 'hulp', 'die', '', 'Ich brauche Hilfe.', 'Ik heb hulp nodig.']]),
+  ...t('Werk', 'A1', [
+    ['Arbeit', 'werk', 'die', '', 'Die Arbeit beginnt um acht Uhr.', 'Het werk begint om acht uur.'], ['Beruf', 'beroep', 'der', 'Berufe', 'Was ist dein Beruf?', 'Wat is jouw beroep?'], ['Chef', 'baas', 'der', 'Chefs', 'Mein Chef ist nett.', 'Mijn baas is aardig.'],
+    ['Büro', 'kantoor', 'das', 'Büros', 'Das Büro ist klein.', 'Het kantoor is klein.'], ['Kollege', 'collega', 'der', 'Kollegen', 'Mein Kollege kocht Kaffee.', 'Mijn collega zet koffie.'], ['Termin', 'afspraak', 'der', 'Termine', 'Ich habe heute einen Termin.', 'Ik heb vandaag een afspraak.']]),
+  ...t('Winkelen', 'A1', [
+    ['Supermarkt', 'supermarkt', 'der', 'Supermärkte', 'Der Supermarkt ist offen.', 'De supermarkt is open.'], ['Preis', 'prijs', 'der', 'Preise', 'Der Preis ist gut.', 'De prijs is goed.'], ['Euro', 'euro', 'der', 'Euros', 'Das Brot kostet zwei Euro.', 'Het brood kost twee euro.'],
+    ['teuer', 'duur', 'a', '', 'Der Kaffee ist teuer.', 'De koffie is duur.'], ['billig', 'goedkoop', 'a', '', 'Das Obst ist billig.', 'Het fruit is goedkoop.'], ['bezahlen', 'betalen', 'v', '', 'Ich bezahle die Rechnung.', 'Ik betaal de rekening.'], ['kosten', 'kosten', 'v', '', 'Das kostet zehn Euro.', 'Dat kost tien euro.']]),
+  ...t('Gevoelens', 'A1', [
+    ['glücklich', 'gelukkig', 'a', '', 'Karst ist glücklich.', 'Karst is gelukkig.'], ['wütend', 'boos', 'a', '', 'Der Chef ist wütend.', 'De baas is boos.'], ['nervös', 'zenuwachtig', 'a', '', 'Ich bin nervös.', 'Ik ben zenuwachtig.'],
+    ['lieben', 'liefhebben', 'v', '', 'Ich liebe meine Familie.', 'Ik hou van mijn familie.'], ['Liebe', 'liefde', 'die', '', 'Die Liebe ist schön.', 'De liefde is mooi.'], ['Angst', 'angst', 'die', 'Ängste', 'Ich habe keine Angst.', 'Ik ben niet bang.'],
+    ['lächeln', 'glimlachen', 'v', '', 'Carla lächelt.', 'Carla glimlacht.'], ['weinen', 'huilen', 'v', '', 'Das Kind weint.', 'Het kind huilt.']]),
+  ...t('Dagelijks leven', 'A1', [
+    ['aufstehen', 'opstaan', 'v', '', 'Ich stehe um sieben Uhr auf.', 'Ik sta om zeven uur op.'], ['anrufen', 'bellen', 'v', '', 'Ich rufe Carla an.', 'Ik bel Carla.'], ['warten', 'wachten', 'v', '', 'Ich warte am Bahnhof.', 'Ik wacht op het station.'],
+    ['besuchen', 'bezoeken', 'v', '', 'Ich besuche meine Mutter.', 'Ik bezoek mijn moeder.'], ['wollen', 'willen', 'v', '', 'Ich will schlafen.', 'Ik wil slapen.'], ['können', 'kunnen', 'v', '', 'Ich kann schwimmen.', 'Ik kan zwemmen.'], ['müssen', 'moeten', 'v', '', 'Ich muss arbeiten.', 'Ik moet werken.']]),
 ];

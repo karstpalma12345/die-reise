@@ -1,7 +1,7 @@
 import type { Word } from './content/vocab';
 export interface Ex {
-  id: string; kind: 'mc' | 'type'; prompt: string; options?: string[]; answers: string[];
-  explain: string; topic: string; category: 'vocabulary' | 'article' | 'verb' | 'translation';
+  id: string; kind: 'mc' | 'type' | 'order'; prompt: string; options?: string[]; answers: string[];
+  explain: string; topic: string; category: 'vocabulary' | 'article' | 'verb' | 'translation' | 'sentence';
   vocabId?: string; near?: string;
 }
 export const norm = (s: string) => s.toLowerCase().replace(/ß/g, 'ss').replace(/[.,!?"'’]/g, '').replace(/\s+/g, ' ').trim();
