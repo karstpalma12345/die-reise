@@ -42,3 +42,11 @@ export async function put<T>(store: StoreName, key: string, value: T): Promise<v
 export async function requestPersistence(): Promise<boolean> {
   try { return (await navigator.storage?.persist?.()) ?? false; } catch { return false; }
 }
+export async function all<T>(store: StoreName): Promise<T[]> {
+  const db = await open();
+  return new Promise((res, rej) => {
+    const r = db.transaction(store).objectStore(store).getAll();
+    r.onsuccess = () => res(r.result as T[]);
+    r.onerror = () => rej(r.error);
+  });
+}
