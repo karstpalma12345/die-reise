@@ -8,12 +8,12 @@ export const norm = (s: string) => s.toLowerCase().replace(/ß/g, 'ss').replace(
 export const isCorrect = (ex: Ex, given: string) => ex.answers.some((a) => norm(a) === norm(given));
 export const shuffle = <T,>(a: T[]): T[] => { const r = [...a]; for (let i = r.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [r[i], r[j]] = [r[j], r[i]]; } return r; };
 export const full = (w: Word) => (w.gender ? `${w.gender} ${w.de}` : w.de);
-const info = (w: Word) => `${full(w)} = ${w.nl}${w.plural ? ` (meervoud: die ${w.plural})` : ''}. Voorbeeld: ${w.ex} – ${w.exNl}`;
+const info = (w: Word) => `${w.ex} – ${w.exNl}`;
 
 export function vocabEx(w: Word, kind: 'recog' | 'recall' | 'article', pool: Word[]): Ex {
   const base = { vocabId: w.id, topic: w.topic, explain: info(w) };
   if (kind === 'article' && w.gender)
-    return { ...base, id: `${w.id}-art`, kind: 'mc', prompt: `Welk lidwoord hoort bij "${w.de}" (${w.nl})?`, options: ['der', 'die', 'das'], answers: [w.gender], category: 'article' };
+    return { ...base, id: `${w.id}-art`, kind: 'mc', prompt: `Welk lidwoord hoort bij "${w.de}" (${w.nl})?`, options: ['der', 'die', 'das'], answers: [w.gender], category: 'article', explain: `${full(w)} = ${w.nl}${w.plural ? ` · mv. die ${w.plural}` : ''}` };
   if (kind === 'recall')
     return { ...base, id: `${w.id}-nl2de`, kind: 'type', prompt: `Hoe zeg je in het Duits: "${w.nl}"?${w.gender ? ' (met lidwoord)' : ''}`, answers: [full(w)], near: w.gender ? w.de : undefined, category: 'vocabulary' };
   const others = shuffle(pool.filter((p) => p.id !== w.id && p.type === w.type && p.nl !== w.nl)).slice(0, 3).map((p) => p.nl);

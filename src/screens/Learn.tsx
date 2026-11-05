@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import Practice, { type Wrong } from './Practice';
 import { APP_VERSION } from '../version';
+import { recordAnswer } from '../progress';
 import { all, put } from '../db';
 import { VOCAB } from '../content/vocab';
 import { LESSONS, PLACEMENT, type Lesson } from '../content/lessons';
@@ -39,10 +40,7 @@ export default function Learn({ gainXp, setLevel }: Props) {
     });
     setView({ t: 'drill', ex });
   };
-  const onAnswer = async (ex: Ex, ok: boolean, given: string) => {
-    if (ex.vocabId) await put('vocab', ex.vocabId, review(cards.get(ex.vocabId) ?? newCard(ex.vocabId), ok, ex.kind === 'type'));
-    if (!ok) await put('mistakes', `${Date.now()}-${ex.id}`, { exerciseId: ex.id, prompt: ex.prompt, given, correct: ex.answers[0], topic: ex.topic, category: ex.category, date: dayStr() });
-  };
+  const onAnswer = recordAnswer;
 
   if (view.t === 'drill') return <Practice title="Woorden" exercises={view.ex} onAnswer={onAnswer} onExit={() => { refresh(); setView({ t: 'menu' }); }}
     onDone={(s, t, w) => { gainXp(s * 10); refresh(); setView({ t: 'result', title: 'Woordtrainer klaar', score: s, total: t, wrong: w, msg: 'Woorden die je fout had, komen snel terug. Zo onthoud je ze beter.' }); }} />;
@@ -60,13 +58,13 @@ export default function Learn({ gainXp, setLevel }: Props) {
       <button className="primary" onClick={() => setView({ t: 'lessonEx', l })}>Naar de oefeningen</button></div>); }
   if (view.t === 'result') { const v = view; return (
     <div className="screen center"><h2>{v.title}</h2><div className="stat big"><b>{v.score}/{v.total}</b><span>goed</span></div><p>{v.msg}</p>
-      {v.wrong && v.wrong.length > 0 && <div className="card wrongs"><strong>Om nog eens te bekijken ({v.wrong.length})</strong>{v.wrong.map((x, i) => <div key={i} className="wr"><b>{x.prompt}</b><span>Jouw antwoord: {x.given}</span><span>Juist: {x.correct}</span><span className="muted">{x.explain}</span></div>)}</div>}
+      {v.wrong && v.wrong.length > 0 && <div className="card wrongs"><strong>Om nog eens te bekijken ({v.wrong.length})</strong>{v.wrong.map((x, i) => <div key={i} className="wr"><b>{x.prompt}</b><span>Juist: {x.correct}</span><span className="muted">{x.explain}</span></div>)}</div>}
       {v.level && <><button className="primary" onClick={() => { setLevel(v.level!); setView({ t: 'menu' }); }}>Gebruik niveau {v.level}</button>
         <button className="chip" onClick={() => { setLevel('A0'); setView({ t: 'menu' }); }}>Toch bij A0 beginnen</button></>}
       {!v.level && <button className="primary" onClick={() => setView({ t: 'menu' })}>Verder</button>}</div>); }
 
   return (
-    <div className="screen"><h2>Leren</h2><p className="muted">Versie {APP_VERSION} · {VOCAB.length} woorden in de database</p>
+    <div className="screen"><h2>Oefenen</h2><p className="muted">Versie {APP_VERSION} · {VOCAB.length} woorden in de database</p>
       <div className="card"><strong>Woordtrainer</strong>
         <p>{VOCAB.length} woorden: {counts.Nieuw} nieuw · {counts.Herkend} herkend · {counts.Actief} actief onthouden. Nu te herhalen: {due.length}.</p>
         <button className="primary" onClick={startDrill}>{due.length || fresh.length ? 'Woorden oefenen' : 'Extra oefenen'}</button></div>
@@ -76,6 +74,7 @@ export default function Learn({ gainXp, setLevel }: Props) {
           <strong>{done.has(l.id) ? '✅ ' : open ? '' : '🔒 '}{l.title}</strong><span className="muted">{l.level} · {open ? l.objective : 'Rond eerst de vorige les af.'}</span></button>; })}
       <h3>Instaptoets</h3>
       <div className="card"><p>10 korte vragen om te schatten waar je begint. Je mag ook gewoon bij A0 starten.</p><button className="chip" onClick={() => setView({ t: 'place' })}>Start instaptoets</button></div>
+      <div className="card"><strong>Spreken en luisteren</strong><p>Komt binnenkort: Carla spreekt woorden en zinnen uit en jij neemt jezelf op.</p></div>
     </div>
   );
 }
