@@ -1,15 +1,18 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { type Ex, isCorrect, norm } from '../exercises';
-interface Props { title: string; exercises: Ex[]; onAnswer?: (ex: Ex, ok: boolean, given: string) => void; onDone: (score: number, total: number) => void; onExit: () => void; showFeedback?: boolean; }
+export interface Wrong { prompt: string; given: string; correct: string; explain: string }
+interface Props { title: string; exercises: Ex[]; onAnswer?: (ex: Ex, ok: boolean, given: string) => void; onDone: (score: number, total: number, wrong: Wrong[]) => void; onExit: () => void; showFeedback?: boolean; }
 export default function Practice({ title, exercises, onAnswer, onDone, onExit, showFeedback = true }: Props) {
   const [i, setI] = useState(0); const [given, setGiven] = useState(''); const [res, setRes] = useState<boolean | null>(null); const [score, setScore] = useState(0);
+  const wrongRef = useRef<Wrong[]>([]);
   const ex = exercises[i];
   const submit = (g: string) => {
     if (res !== null || !g.trim()) return;
-    const ok = isCorrect(ex, g); setGiven(g); setRes(ok); if (ok) setScore((s) => s + 1); onAnswer?.(ex, ok, g);
+    const ok = isCorrect(ex, g); if (!ok) wrongRef.current.push({ prompt: ex.prompt, given: g, correct: ex.answers[0], explain: ex.explain });
+    setGiven(g); setRes(ok); if (ok) setScore((s) => s + 1); onAnswer?.(ex, ok, g);
     if (!showFeedback) next(ok ? score + 1 : score);
   };
-  const next = (sc = score) => { if (i + 1 >= exercises.length) onDone(sc, exercises.length); else { setI(i + 1); setGiven(''); setRes(null); } };
+  const next = (sc = score) => { if (i + 1 >= exercises.length) onDone(sc, exercises.length, wrongRef.current); else { setI(i + 1); setGiven(''); setRes(null); } };
   return (
     <div className="screen">
       <div className="row"><button className="link" onClick={onExit}>← Stoppen</button><span className="muted">{title} · {i + 1}/{exercises.length}</span></div>
