@@ -16,6 +16,6 @@ export function vocabEx(w: Word, kind: 'recog' | 'recall' | 'article', pool: Wor
     return { ...base, id: `${w.id}-art`, kind: 'mc', prompt: `Welk lidwoord hoort bij "${w.de}" (${w.nl})?`, options: ['der', 'die', 'das'], answers: [w.gender], category: 'article' };
   if (kind === 'recall')
     return { ...base, id: `${w.id}-nl2de`, kind: 'type', prompt: `Hoe zeg je in het Duits: "${w.nl}"?${w.gender ? ' (met lidwoord)' : ''}`, answers: [full(w)], near: w.gender ? w.de : undefined, category: 'vocabulary' };
-  const others = shuffle(pool.filter((p) => p.id !== w.id && p.type === w.type)).slice(0, 3).map((p) => p.nl);
+  const others = shuffle(pool.filter((p) => p.id !== w.id && p.type === w.type && p.nl !== w.nl)).slice(0, 3).map((p) => p.nl);
   return { ...base, id: `${w.id}-de2nl`, kind: 'mc', prompt: `Wat betekent "${full(w)}"?`, options: shuffle([w.nl, ...others]), answers: [w.nl], category: 'vocabulary' };
 }

@@ -1,3 +1,4 @@
+import { MORE } from './vocab-more';
 // Woordenlijst. Nieuwe woorden toevoegen = een regel toevoegen aan RAW. Geen andere code aanpassen.
 export interface Word { id: string; de: string; nl: string; type: 'noun' | 'verb' | 'adj' | 'phrase'; gender?: 'der' | 'die' | 'das'; plural?: string; ex: string; exNl: string; level: 'A0' | 'A1'; topic: string; }
 type R = [string, string, Word['type'], string, string, string, string, string]; // de, nl, type, gender|'', plural, ex, exNl, topic
@@ -43,6 +44,10 @@ const RAW: R[] = [
   ['müde', 'moe', 'adj', '', '', 'Karst ist müde.', 'Karst is moe.', 'Bijvoeglijke naamwoorden'],
   ['schön', 'mooi', 'adj', '', '', 'Der Teich ist schön.', 'De vijver is mooi.', 'Bijvoeglijke naamwoorden'],
 ];
-export const VOCAB: Word[] = RAW.map(([de, nl, type, g, plural, ex, exNl, topic]) => ({
-  id: de.toLowerCase().replace(/[^a-zäöüß]+/g, '-'), de, nl, type, gender: (g || undefined) as Word['gender'], plural: plural || undefined, ex, exNl, level: 'A0', topic,
-}));
+const toWord = ([de, nl, type, g, plural, ex, exNl, topic, level]: (string | undefined)[]): Word => ({
+  id: (de as string).toLowerCase().replace(/[^a-zäöüß]+/g, '-'), de: de as string, nl: nl as string, type: type as Word['type'],
+  gender: (g || undefined) as Word['gender'], plural: plural || undefined, ex: ex as string, exNl: exNl as string, level: (level || 'A0') as Word['level'], topic: topic as string,
+});
+// Eerst de basislijst, dan de uitbreiding; dubbele woorden worden automatisch overgeslagen.
+const seen = new Set<string>();
+export const VOCAB: Word[] = [...RAW, ...MORE].map(toWord).filter((w) => !seen.has(w.id) && !!seen.add(w.id));
