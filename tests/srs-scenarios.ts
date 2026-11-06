@@ -1,0 +1,45 @@
+// Testscenario's voor het herhalingssysteem. (Dit bestand is voor de ontwikkelaar; je hoeft het niet te gebruiken.)
+import { addDays, review, fStatus, newFacet, wordStatus, fromOldCard, type FacetRec } from '../src/srs';
+import { buildWordSession } from '../src/session';
+import { VOCAB } from '../src/content/vocab';
+import { grade, type Ex } from '../src/exercises';
+let fails = 0; const check = (n: string, c: boolean, i = '') => { console.log((c ? 'PASS ' : 'FAIL ') + n + (i ? '  → ' + i : '')); if (!c) fails++; };
+const D0 = '2026-01-01'; let day = D0;
+let f = newFacet('hund', 'recog', D0);
+check('1  nieuw woord is "Nieuw"', fStatus(f) === 'new');
+for (let i = 0; i < 3; i++) f = review(f, false, D0);
+check('2  3x fout → "Extra oefening nodig"', fStatus(f) === 'extra', fStatus(f));
+check('3  komt dezelfde dag opnieuw terug', f.due === D0);
+const steps: number[] = []; const stat: string[] = []; let n = 0;
+while (fStatus(f) !== 'mastered' && n++ < 20) { day = f.due > day ? f.due : addDays(day, 1); f = review(f, true, day); steps.push(f.interval); stat.push(fStatus(f)); }
+check('4  na 3x goed niet meer "extra"', stat[2] === 'learning', stat.slice(0, 4).join(' > '));
+check('5a interval groeit geleidelijk', steps.every((v, i) => i === 0 || v >= steps[i - 1]), steps.join(', '));
+check('5b uiteindelijk "Beheerst" (≥3 dagen, interval ≥14)', fStatus(f) === 'mastered' && f.days.length >= 3 && f.interval >= 14, `${n} goede antwoorden, interval ${f.interval}`);
+const before = f.interval; day = f.due; f = review(f, false, day);
+check('6  latere fout → weer "Extra oefening nodig" (zachte straf)', fStatus(f) === 'extra' && f.interval > 0 && f.interval < before, `interval ${before} → ${f.interval}`);
+n = 0; while (fStatus(f) !== 'mastered' && n++ < 20) { day = f.due > day ? f.due : addDays(day, 1); f = review(f, true, day); }
+check('7  daarna opnieuw "Beheerst"', fStatus(f) === 'mastered', `na ${n} goede antwoorden`);
+let v = newFacet('strasse', 'recall', D0); for (let i = 0; i < 8; i++) v = review(v, true, addDays(D0, i * 3), true);
+check('8  alleen schrijfvarianten → nooit "Beheerst"', fStatus(v) !== 'mastered' && v.days.length === 0, fStatus(v));
+let r = newFacet('tisch', 'recog', D0), a = newFacet('tisch', 'article', D0); let d2 = D0;
+for (let i = 0; i < 9; i++) { d2 = r.due > d2 ? r.due : addDays(d2, 1); r = review(r, true, d2); } const rI = r.interval;
+for (let i = 0; i < 3; i++) a = review(a, false, d2);
+check('9  lidwoord fout ≠ heel woord opnieuw', wordStatus(['recog', 'article'], (x) => (x === 'recog' ? r : a)) === 'extra' && r.interval === rI && fStatus(r) === 'mastered', `betekenis blijft "${fStatus(r)}", lidwoord "${fStatus(a)}"`);
+const old = fromOldCard({ id: 'hund', due: D0, interval: 6, ease: 2.2, reps: 3, lapses: 1, ok: 5, bad: 1, recogOk: 3, recallOk: 2, last: D0 });
+check('10 oude voortgang blijft bruikbaar (migratie)', old.length === 2 && old[0].facet === 'recog' && old[0].ok === 3 && old[1].facet === 'recall', old.map((x) => x.id).join(', '));
+const M = (xs: FacetRec[]) => new Map(xs.map((x) => [x.id, x]));
+check('11 nieuw begin: 3 nieuwe woorden', buildWordSession(M([]), 8).ex.length === 3);
+const back = VOCAB.slice(0, 14).map((w) => ({ ...newFacet(w.id, 'recog', D0), due: addDays(D0, -1), recent: '1', ok: 1, reps: 1, interval: 1 }));
+const sBack = buildWordSession(M(back), 10); const ids = new Set(VOCAB.slice(0, 14).map((w) => w.id));
+check('12 veel achterstand → geen nieuwe woorden erbij', sBack.ex.every((e) => ids.has(e.vocabId!)));
+const far = { ...newFacet(VOCAB[0].id, 'recog', D0), due: '2099-01-01', recent: '111', ok: 3, interval: 40 };
+check('13 beheerst woord (niet aan de beurt) komt niet terug', !buildWordSession(M([far]), 10).ex.some((e) => e.vocabId === VOCAB[0].id && e.facet === 'recog'));
+const T = (kind: Ex['kind'], ...answers: string[]) => ({ id: 't', kind, prompt: '', answers, explain: '', topic: '', category: 'vocabulary' } as Ex);
+const g = (k: Ex['kind'], a: string, typed: string) => grade(T(k, a), typed);
+check('14 volledig goed: "Straße" / "Haus"', g('type', 'Straße', 'Straße') === 'full' && g('type', 'Haus', 'Haus') === 'full');
+check('15 schrijfvariant: strasse / Strasse / haus / uber / ueber', ['strasse', 'Strasse'].every((t) => g('type', 'Straße', t) === 'variant') && g('type', 'Haus', 'haus') === 'variant' && g('type', 'über', 'uber') === 'variant' && g('type', 'über', 'ueber') === 'variant');
+check('16 inhoudelijk fout: bist voor bin, onvolledige zin', g('type', 'bin', 'bist') === 'wrong' && g('type', 'Ich bin müde', 'ich bin') === 'wrong');
+check('17 schon is geen variant van schön', g('type', 'schön', 'schon') === 'wrong');
+check('18 woordvolgorde en meerkeuze: hoofdletters tellen niet', g('order', 'Heute lerne ich Deutsch', 'heute lerne ich deutsch') === 'full' && g('mc', 'der', 'der') === 'full');
+check('19 lidwoord vergeten is fout', g('type', 'der Hund', 'Hund') === 'wrong');
+console.log(fails ? `\n${fails} test(s) MISLUKT` : '\nAlle tests geslaagd'); if (fails) process.exit(1);

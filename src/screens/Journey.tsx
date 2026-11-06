@@ -3,26 +3,29 @@ import Practice, { type Wrong } from './Practice';
 import { Duo } from '../components/Characters';
 import { all, put } from '../db';
 import { LESSONS, type Lesson } from '../content/lessons';
+import { TEXTS, type TextItem } from '../content/texts';
+import { unitLessonsDone } from '../content/curriculum';
 import { dayStr } from '../srs';
 import { type Ex, shuffle } from '../exercises';
 import { recordAnswer, loadFacets } from '../progress';
 import { buildWordSession, buildWeak } from '../session';
 
-type Phase = { kind: 'ex'; title: string; ex: Ex[] } | { kind: 'lesson'; title: string; l: Lesson; ex: Ex[] };
+type Phase = { kind: 'ex'; title: string; ex: Ex[] } | { kind: 'lesson'; title: string; l: Lesson; ex: Ex[] } | { kind: 'text'; title: string; t: TextItem; ex: Ex[] };
 interface Plan { phases: Phase[]; lines: string[] }
 
 // Bouwt een sessie van ± 5 minuten uit: herhaling, een nieuwe les en je terugkerende fouten.
 async function buildPlan(): Promise<Plan> {
   const facets = await loadFacets();
   const done = new Set((await all<{ id: string; done: boolean }>('lessons')).filter((d) => d.done).map((d) => d.id));
-  const { ex: warm, keys } = buildWordSession(facets, 8);
-  const { ex: weak, topics } = buildWeak(facets, keys, 3);
   const lesson = LESSONS.find((l) => !done.has(l.id));
+  const text = TEXTS.find((t) => !done.has(t.id) && unitLessonsDone(t.unit, done)); // een tekst komt als de lessen van zijn unit klaar zijn
+  const { ex: warm, keys } = buildWordSession(facets, lesson && text ? 6 : 8);
+  const { ex: weak, topics } = buildWeak(facets, keys, 3);
   const phases: Phase[] = [{ kind: 'ex', title: 'Warming-up', ex: warm }];
-  const lines = [`${warm.length} woorden herhalen of leren`];
-  if (lesson) { phases.push({ kind: 'lesson', title: lesson.title, l: lesson, ex: shuffle(lesson.exercises).slice(0, 5) }); lines.push(`Nieuwe les: ${lesson.title}`); }
-  if (weak.length) { phases.push({ kind: 'ex', title: 'Aandachtspunten', ex: weak }); lines.push(`${weak.length} aandachtspunten (${topics.join(', ')})`); }
-  return { phases, lines };
+  if (lesson) phases.push({ kind: 'lesson', title: lesson.title, l: lesson, ex: shuffle(lesson.exercises).slice(0, 5) });
+  if (text) phases.push({ kind: 'text', title: text.title, t: text, ex: text.questions });
+  if (weak.length) phases.push({ kind: 'ex', title: 'Aandachtspunten', ex: weak });
+  return { phases, lines: topics };
 }
 
 export default function Journey({ gainXp, onExit }: { gainXp: (n: number) => void; onExit: () => void }) {
@@ -43,6 +46,10 @@ export default function Journey({ gainXp, onExit }: { gainXp: (n: number) => voi
       <button className="primary" onClick={() => setStep('loading')}>Nog een sessie</button><button className="link" onClick={onExit}>Terug naar Home</button></div>);
 
   const ph = plan.phases[p];
+  if (ph.kind === 'text' && explain) return (
+    <div className="screen"><button className="link" onClick={onExit}>← Stoppen</button><h2>{ph.t.title}</h2><p className="muted">Lees de tekst. Tik op een regel voor de vertaling.</p>
+      <div className="card">{ph.t.lines.map((l, k) => <details key={k} className="ln"><summary>{l.who ? (l.who === 'Carla' ? '🐸 ' : '🦎 ') + l.who + ': ' : ''}{l.de}</summary><span className="muted">{l.nl}</span></details>)}</div>
+      <button className="primary" onClick={() => setExplain(false)}>Naar de vragen</button></div>);
   if (ph.kind === 'lesson' && explain) return (
     <div className="screen"><button className="link" onClick={onExit}>← Stoppen</button><h2>{ph.l.title}</h2><p className="muted">Doel: {ph.l.objective}</p>
       {ph.l.sections.map((s) => <div className="card" key={s.h}><strong>{s.h}</strong><p style={{ whiteSpace: 'pre-line' }}>{s.body}</p>
@@ -53,8 +60,8 @@ export default function Journey({ gainXp, onExit }: { gainXp: (n: number) => voi
   return <Practice key={p} title={ph.title} hideTitle offset={offset} grandTotal={grandTotal} exercises={ph.ex} onAnswer={recordAnswer} onExit={onExit}
     onDone={async (s, t, w) => {
       acc.current = { score: acc.current.score + s, total: acc.current.total + t, wrong: [...acc.current.wrong, ...w] };
-      if (ph.kind === 'lesson' && s / t >= 0.7) { await put('lessons', ph.l.id, { id: ph.l.id, done: true, score: s, date: dayStr() }); gainXp(20); }
-      if (p + 1 < plan.phases.length) { setP(p + 1); setExplain(plan.phases[p + 1].kind === 'lesson'); }
+      if (ph.kind !== 'ex' && s / t >= 0.7) { const id = ph.kind === 'lesson' ? ph.l.id : ph.t.id; await put('lessons', id, { id, done: true, score: s, date: dayStr() }); gainXp(ph.kind === 'lesson' ? 20 : 10); }
+      if (p + 1 < plan.phases.length) { setP(p + 1); setExplain(plan.phases[p + 1].kind !== 'ex'); }
       else { gainXp(acc.current.score * 10 + 10); setStep('end'); }
     }} />;
 }

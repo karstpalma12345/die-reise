@@ -2,7 +2,7 @@ import type { Word } from './content/vocab';
 import type { Facet } from './srs';
 export interface Ex {
   id: string; kind: 'mc' | 'type' | 'order'; prompt: string; options?: string[]; answers: string[];
-  explain: string; topic: string; category: 'vocabulary' | 'article' | 'verb' | 'translation' | 'sentence';
+  explain: string; topic: string; category: 'vocabulary' | 'article' | 'verb' | 'translation' | 'sentence' | 'reading';
   vocabId?: string; facet?: Facet; near?: string;
 }
 export const norm = (s: string) => s.toLowerCase().replace(/ß/g, 'ss').replace(/[.,!?"'’]/g, '').replace(/\s+/g, ' ').trim();

@@ -1,6 +1,7 @@
 // Kiest welke oefeningen er aan de beurt zijn (gedeeld door Mijn reis en Oefenen).
 import { VOCAB, type Word } from './content/vocab';
 import { LESSONS } from './content/lessons';
+import { TEXTS } from './content/texts';
 import { type Ex, vocabEx, shuffle } from './exercises';
 import { type Facet, type FacetRec, fStatus, wordStatus, dayStr } from './srs';
 type M = Map<string, FacetRec>;
@@ -27,7 +28,7 @@ export function buildWordSession(m: M, max: number): { ex: Ex[]; keys: Set<strin
 }
 // Aandachtspunten: alleen onderdelen met status "extra oefening nodig" (afgeleid van recente antwoorden).
 export function buildWeak(m: M, skip: Set<string>, max: number): { ex: Ex[]; topics: string[] } {
-  const byId = new Map(VOCAB.map((w) => [w.id, w])); const lessonEx = new Map(LESSONS.flatMap((l) => l.exercises).map((e) => [e.id, e]));
+  const byId = new Map(VOCAB.map((w) => [w.id, w])); const lessonEx = new Map([...LESSONS.flatMap((l) => l.exercises), ...TEXTS.flatMap((t) => t.questions)].map((e) => [e.id, e]));
   const zeros = (f: FacetRec) => [...f.recent].filter((c) => c === '0').length;
   const ex: Ex[] = []; const topics = new Set<string>();
   for (const f of [...m.values()].filter((x) => fStatus(x) === 'extra' && !skip.has(x.id)).sort((a, b) => zeros(b) - zeros(a))) {
