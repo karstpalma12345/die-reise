@@ -45,3 +45,4 @@ details{margin-top:8px}summary{font-weight:600}.stat.big{padding:20px 40px}.stat
 .right{font-size:1.7rem;font-weight:700;color:#2e7d32;margin:2px 0 4px}@media(prefers-color-scheme:dark){.right{color:#8fd48a}}
 .why{margin:0;font-size:.95rem;color:var(--muted)}.tok.good{background:#c9ecc4;border-color:#3a9a3a;color:#1f3b3d}
 .okc .link{align-self:flex-end;padding:0}.card.wrongs span{display:block}
+.link.small{font-size:.85rem;opacity:.75;padding:0}textarea.inp{font-size:.8rem}

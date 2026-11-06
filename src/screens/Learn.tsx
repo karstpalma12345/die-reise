@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import Practice, { type Wrong } from './Practice';
+import ReportsCard from './Reports';
 import { APP_VERSION } from '../version';
 import { recordAnswer } from '../progress';
 import { all, put } from '../db';
@@ -62,6 +63,7 @@ export default function Learn({ gainXp, setLevel }: Props) {
           <strong>{done.has(l.id) ? '✅ ' : open ? '' : '🔒 '}{l.title}</strong><span className="muted">{l.level} · {open ? l.objective : 'Rond eerst de vorige les af.'}</span></button>; })}
       <h3>Instaptoets</h3>
       <div className="card"><p>10 korte vragen om te schatten waar je begint. Je mag ook gewoon bij A0 starten.</p><button className="chip" onClick={() => setView({ t: 'place' })}>Start instaptoets</button></div>
+      <ReportsCard />
       <div className="card"><strong>Spreken en luisteren</strong><p>Komt binnenkort: Carla spreekt woorden en zinnen uit en jij neemt jezelf op.</p></div>
     </div>
   );

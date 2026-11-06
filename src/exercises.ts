@@ -6,7 +6,6 @@ export interface Ex {
   vocabId?: string; facet?: Facet; near?: string;
 }
 export const norm = (s: string) => s.toLowerCase().replace(/ß/g, 'ss').replace(/[.,!?"'’]/g, '').replace(/\s+/g, ' ').trim();
-export const isCorrect = (ex: Ex, given: string) => ex.answers.some((a) => norm(a) === norm(given));
 export const shuffle = <T,>(a: T[]): T[] => { const r = [...a]; for (let i = r.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [r[i], r[j]] = [r[j], r[i]]; } return r; };
 export const full = (w: Word) => (w.gender ? `${w.gender} ${w.de}` : w.de);
 const info = (w: Word) => `${w.ex} – ${w.exNl}`;
@@ -21,3 +20,21 @@ export function vocabEx(w: Word, kind: 'recog' | 'recall' | 'article', pool: Wor
   const others = shuffle(pool.filter((p) => p.id !== w.id && p.type === w.type && p.nl !== w.nl)).slice(0, 3).map((p) => p.nl);
   return { ...base, id: `${w.id}-de2nl`, kind: 'mc', prompt: `Wat betekent "${full(w)}"?`, options: shuffle([w.nl, ...others]), answers: [w.nl], category: 'vocabulary' };
 }
+
+// Antwoordcontrole met drie uitkomsten: full (goed), variant (bijna goed: schrijfvariant) of wrong.
+// Bij typen telt een andere hoofdletter, ß→ss, ä/ö/ü → a/o/u of ae/oe/ue als schrijfvariant. Zet CASE_STRICT op false om hoofdletters te negeren.
+const CASE_STRICT = true;
+const TWINS = new Set(['schon', 'wurde', 'zahlen', 'bar']); // zonder trema een ander woord (schön/schon): nooit een variant
+const strip = (s: string) => s.replace(/[.,!?"'’]/g, '').replace(/\s+/g, ' ').trim();
+const forms = (a: string) => { const s = strip(a).toLowerCase().replace(/ß/g, 'ss');
+  return [s, s.replace(/ä/g, 'a').replace(/ö/g, 'o').replace(/ü/g, 'u'), s.replace(/ä/g, 'ae').replace(/ö/g, 'oe').replace(/ü/g, 'ue')]; };
+export type Grade = 'full' | 'variant' | 'wrong';
+export function grade(ex: Ex, given: string): Grade {
+  const g = strip(given); if (!g) return 'wrong'; const low = g.toLowerCase();
+  if (ex.kind !== 'type') return ex.answers.some((a) => strip(a).toLowerCase() === low) ? 'full' : 'wrong'; // meerkeuze en woordvolgorde: hoofdletters tellen niet
+  if (ex.answers.some((a) => strip(a) === g)) return 'full';
+  if (TWINS.has(low)) return 'wrong';
+  if (ex.answers.some((a) => forms(a).includes(low.replace(/ß/g, 'ss')))) return CASE_STRICT || low !== strip(ex.answers[0]).toLowerCase() ? 'variant' : 'full';
+  return 'wrong';
+}
+export const isCorrect = (ex: Ex, given: string) => grade(ex, given) !== 'wrong';

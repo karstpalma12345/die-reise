@@ -25,40 +25,36 @@ async function buildPlan(): Promise<Plan> {
   return { phases, lines };
 }
 
-export default function Journey({ gainXp }: { gainXp: (n: number) => void }) {
+export default function Journey({ gainXp, onExit }: { gainXp: (n: number) => void; onExit: () => void }) {
   const [plan, setPlan] = useState<Plan | null>(null);
-  const [step, setStep] = useState<'intro' | 'run' | 'end'>('intro');
+  const [step, setStep] = useState<'loading' | 'run' | 'end'>('loading');
   const [p, setP] = useState(0); const [explain, setExplain] = useState(false);
   const acc = useRef({ score: 0, total: 0, wrong: [] as Wrong[] });
-  useEffect(() => { if (step === 'intro') { setPlan(null); buildPlan().then(setPlan); } }, [step]);
+  // Geen tussenscherm: de sessie start direct.
+  useEffect(() => { if (step === 'loading') buildPlan().then((pl) => { acc.current = { score: 0, total: 0, wrong: [] }; setPlan(pl); setP(0); setExplain(pl.phases[0].kind === 'lesson'); setStep('run'); }); }, [step]);
 
-  if (step === 'intro') return (
-    <div className="screen center"><Duo size={90} /><h2>Mijn reis</h2>
-      {!plan ? <p className="muted">Even je sessie voorbereiden…</p> : <>
-        <div className="card wrongs"><strong>Vandaag, ± 5 minuten</strong>{plan.lines.map((l) => <span key={l}>• {l}</span>)}</div>
-        <button className="primary" onClick={() => { acc.current = { score: 0, total: 0, wrong: [] }; setP(0); setExplain(plan.phases[0].kind === 'lesson'); setStep('run'); }}>Start sessie</button></>}
-    </div>);
-
+  if (step === 'loading' || !plan) return <div className="screen center"><Duo size={90} /><p className="muted">Even je sessie voorbereiden…</p></div>;
   if (step === 'end') return (
     <div className="screen center"><Duo size={90} mood="cheer" /><h2>Sessie klaar!</h2>
       <div className="stat big"><b>{acc.current.score}/{acc.current.total}</b><span>goed</span></div>
       {acc.current.wrong.length > 0 && <div className="card wrongs"><strong>Om nog eens te bekijken ({acc.current.wrong.length})</strong>
         {acc.current.wrong.map((x, i) => <div key={i} className="wr"><b>{x.prompt}</b><span>Juist: {x.correct}</span><span className="muted">{x.explain}</span></div>)}</div>}
       <p className="muted">Fouten komen vanzelf terug in een volgende sessie.</p>
-      <button className="primary" onClick={() => setStep('intro')}>Nog een sessie</button></div>);
+      <button className="primary" onClick={() => setStep('loading')}>Nog een sessie</button><button className="link" onClick={onExit}>Terug naar Home</button></div>);
 
-  const ph = plan!.phases[p];
+  const ph = plan.phases[p];
   if (ph.kind === 'lesson' && explain) return (
-    <div className="screen"><button className="link" onClick={() => setStep('intro')}>← Stoppen</button><h2>{ph.l.title}</h2><p className="muted">Doel: {ph.l.objective}</p>
+    <div className="screen"><button className="link" onClick={onExit}>← Stoppen</button><h2>{ph.l.title}</h2><p className="muted">Doel: {ph.l.objective}</p>
       {ph.l.sections.map((s) => <div className="card" key={s.h}><strong>{s.h}</strong><p style={{ whiteSpace: 'pre-line' }}>{s.body}</p>
         {s.examples?.map(([de, nl]) => <details key={de}><summary>{de}</summary><span className="muted">{nl}</span></details>)}</div>)}
       <button className="primary" onClick={() => setExplain(false)}>Naar de oefeningen</button></div>);
 
-  return <Practice key={p} title={ph.title} exercises={ph.ex} onAnswer={recordAnswer} onExit={() => setStep('intro')}
+  const offset = plan.phases.slice(0, p).reduce((n, x) => n + x.ex.length, 0); const grandTotal = plan.phases.reduce((n, x) => n + x.ex.length, 0);
+  return <Practice key={p} title={ph.title} hideTitle offset={offset} grandTotal={grandTotal} exercises={ph.ex} onAnswer={recordAnswer} onExit={onExit}
     onDone={async (s, t, w) => {
       acc.current = { score: acc.current.score + s, total: acc.current.total + t, wrong: [...acc.current.wrong, ...w] };
       if (ph.kind === 'lesson' && s / t >= 0.7) { await put('lessons', ph.l.id, { id: ph.l.id, done: true, score: s, date: dayStr() }); gainXp(20); }
-      if (p + 1 < plan!.phases.length) { setP(p + 1); setExplain(plan!.phases[p + 1].kind === 'lesson'); }
+      if (p + 1 < plan.phases.length) { setP(p + 1); setExplain(plan.phases[p + 1].kind === 'lesson'); }
       else { gainXp(acc.current.score * 10 + 10); setStep('end'); }
     }} />;
 }
