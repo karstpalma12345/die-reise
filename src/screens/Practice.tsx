@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { type Ex, type Grade, grade, norm } from '../exercises';
 import { addReport } from '../reports';
+import { Karst, Carla, type Mood } from '../components/Characters';
 export interface Wrong { prompt: string; correct: string; explain: string }
 interface Props { title: string; exercises: Ex[]; onAnswer?: (ex: Ex, ok: boolean, given: string, partial?: boolean) => void; onDone: (score: number, total: number, wrong: Wrong[]) => void; onExit: () => void;
   showFeedback?: boolean; offset?: number; grandTotal?: number; hideTitle?: boolean; }
@@ -30,6 +31,9 @@ export default function Practice({ title, exercises, onAnswer, onDone, onExit, s
   }, [given]); // eslint-disable-line
   const total = grandTotal ?? exercises.length; const words = ex.options ?? [];
   const shown = res === 'wrong' ? ex.answers[0].split(' ') : picked.map((n) => words[n]); // bij een fout zie je alleen het juiste antwoord
+  // Karst en Carla reageren: nadenkend bij zelf typen/ordenen, blij bij goed, verbaasd (maar vriendelijk) bij een fout.
+  const km: Mood = res === 'full' ? 'cheer' : res === 'variant' ? 'happy' : res === 'wrong' ? 'oops' : ex.kind === 'mc' ? 'happy' : 'thinking';
+  const cm: Mood = res === 'full' ? 'cheer' : 'happy';
   const orderUI = (<div>
     <div className="ans" aria-label="Jouw zin">{shown.length === 0 && <span className="muted">Tik op de woorden in de goede volgorde</span>}
       {shown.map((w, k) => <button key={k} className={'tok' + (res === 'wrong' ? ' good' : '')} disabled={res !== null} onClick={() => setPicked(picked.filter((x) => x !== picked[k]))}>{w}</button>)}</div>
@@ -37,7 +41,7 @@ export default function Practice({ title, exercises, onAnswer, onDone, onExit, s
     {res === null && <button className="primary" disabled={!picked.length} onClick={() => submit(picked.map((n) => words[n]).join(' '))}>Controleer</button>}</div>);
   return (
     <div className="screen">
-      <div className="row"><button className="link" onClick={onExit}>← Stoppen</button>{!hideTitle && <span className="muted">{title} · {i + 1}/{exercises.length}</span>}</div>
+      <div className="row"><button className="link" onClick={onExit}>← Stoppen</button>{!hideTitle && <span className="muted">{title} · {i + 1}/{exercises.length}</span>}<div className="react" key={`${i}-${res}`}><Karst size={52} mood={km} /><Carla size={52} mood={cm} delay="0.15s" /></div></div>
       <div className="bar"><i style={{ width: ((offset + i) / total) * 100 + '%' }} /></div>
       <div className="card"><h2 className="q">{ex.prompt}</h2>
         {ex.kind === 'order' ? orderUI : ex.kind === 'mc' ? <div className="opts">{ex.options!.map((o) => <button key={o} className={'opt' + (res !== null && grade(ex, o) !== 'wrong' ? ' ok' : '')} disabled={res !== null} onClick={() => submit(o)}>{o}</button>)}</div>
