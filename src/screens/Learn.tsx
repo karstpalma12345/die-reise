@@ -5,7 +5,9 @@ import { recordAnswer } from '../progress';
 import { all, put } from '../db';
 import { VOCAB } from '../content/vocab';
 import { LESSONS, PLACEMENT, type Lesson } from '../content/lessons';
-import { type Card, newCard, review, status, dayStr } from '../srs';
+import { type FacetRec, dayStr } from '../srs';
+import { loadFacets } from '../progress';
+import { buildWordSession, wordCounts, dueCount } from '../session';
 import { type Ex, vocabEx, shuffle } from '../exercises';
 import type { Level } from '../profile';
 
@@ -16,30 +18,16 @@ interface Done { id: string; done: boolean }
 
 export default function Learn({ gainXp, setLevel }: Props) {
   const [view, setView] = useState<View>({ t: 'menu' });
-  const [cards, setCards] = useState<Map<string, Card>>(new Map());
+  const [facets, setFacets] = useState<Map<string, FacetRec>>(new Map());
   const [done, setDone] = useState<Set<string>>(new Set());
   const refresh = useCallback(async () => {
-    setCards(new Map((await all<Card>('vocab')).map((c) => [c.id, c])));
+    setFacets(await loadFacets());
     setDone(new Set((await all<Done>('lessons')).filter((d) => d.done).map((d) => d.id)));
   }, []);
   useEffect(() => { refresh(); }, [refresh]);
 
-  const today = dayStr();
-  const due = VOCAB.filter((w) => { const c = cards.get(w.id); return c && c.due <= today; });
-  const fresh = VOCAB.filter((w) => !cards.has(w.id));
-  const counts = { Nieuw: 0, Herkend: 0, Actief: 0 } as Record<string, number>;
-  VOCAB.forEach((w) => counts[status(cards.get(w.id))]++);
-
-  const startDrill = () => {
-    let words = [...shuffle(due).slice(0, 8), ...fresh.slice(0, 5)];
-    if (!words.length) words = shuffle(VOCAB).slice(0, 8);
-    const ex = words.map((w) => {
-      const c = cards.get(w.id);
-      if (w.gender && c && c.recogOk >= 1 && Math.random() < 0.35) return vocabEx(w, 'article', VOCAB);
-      return vocabEx(w, c && c.recogOk >= 2 ? 'recall' : 'recog', VOCAB);
-    });
-    setView({ t: 'drill', ex });
-  };
+  const counts = wordCounts(facets);
+  const startDrill = () => setView({ t: 'drill', ex: buildWordSession(facets, 12).ex });
   const onAnswer = recordAnswer;
 
   if (view.t === 'drill') return <Practice title="Woorden" exercises={view.ex} onAnswer={onAnswer} onExit={() => { refresh(); setView({ t: 'menu' }); }}
@@ -66,8 +54,8 @@ export default function Learn({ gainXp, setLevel }: Props) {
   return (
     <div className="screen"><h2>Oefenen</h2><p className="muted">Versie {APP_VERSION} · {VOCAB.length} woorden in de database</p>
       <div className="card"><strong>Woordtrainer</strong>
-        <p>{VOCAB.length} woorden: {counts.Nieuw} nieuw · {counts.Herkend} herkend · {counts.Actief} actief onthouden. Nu te herhalen: {due.length}.</p>
-        <button className="primary" onClick={startDrill}>{due.length || fresh.length ? 'Woorden oefenen' : 'Extra oefenen'}</button></div>
+        <p>{VOCAB.length} woorden: {counts.new} nieuw · {counts.learning} aan het leren · {counts.extra} extra oefening nodig · {counts.mastered} beheerst. Nu te herhalen: {dueCount(facets)}.</p>
+        <button className="primary" onClick={startDrill}>Woorden oefenen</button></div>
       <h3>Grammatica</h3>
       {LESSONS.map((l, i) => { const open = i === 0 || done.has(LESSONS[i - 1].id);
         return <button key={l.id} className={'card item' + (open ? '' : ' locked')} disabled={!open} onClick={() => setView({ t: 'lesson', l })}>

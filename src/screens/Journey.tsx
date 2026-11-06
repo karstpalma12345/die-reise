@@ -2,43 +2,26 @@ import { useEffect, useRef, useState } from 'react';
 import Practice, { type Wrong } from './Practice';
 import { Duo } from '../components/Characters';
 import { all, put } from '../db';
-import { VOCAB } from '../content/vocab';
 import { LESSONS, type Lesson } from '../content/lessons';
-import { type Card, dayStr } from '../srs';
-import { type Ex, vocabEx, shuffle } from '../exercises';
-import { recordAnswer, wordIdOf } from '../progress';
+import { dayStr } from '../srs';
+import { type Ex, shuffle } from '../exercises';
+import { recordAnswer, loadFacets } from '../progress';
+import { buildWordSession, buildWeak } from '../session';
 
-interface Mistake { exerciseId: string; topic: string }
 type Phase = { kind: 'ex'; title: string; ex: Ex[] } | { kind: 'lesson'; title: string; l: Lesson; ex: Ex[] };
 interface Plan { phases: Phase[]; lines: string[] }
 
 // Bouwt een sessie van ± 5 minuten uit: herhaling, een nieuwe les en je terugkerende fouten.
 async function buildPlan(): Promise<Plan> {
-  const cards = new Map((await all<Card>('vocab')).map((c) => [c.id, c]));
-  const mistakes = await all<Mistake>('mistakes');
+  const facets = await loadFacets();
   const done = new Set((await all<{ id: string; done: boolean }>('lessons')).filter((d) => d.done).map((d) => d.id));
-  const today = dayStr();
-  let words = [...shuffle(VOCAB.filter((w) => { const c = cards.get(w.id); return c && c.due <= today; })).slice(0, 4), ...VOCAB.filter((w) => !cards.has(w.id)).slice(0, 3)];
-  if (!words.length) words = shuffle(VOCAB).slice(0, 6);
-  const warm = words.map((w) => { const c = cards.get(w.id);
-    return w.gender && c && c.recogOk >= 1 && Math.random() < 0.35 ? vocabEx(w, 'article', VOCAB) : vocabEx(w, c && c.recogOk >= 2 ? 'recall' : 'recog', VOCAB); });
-  // terugkerende fouten: wie vaker fout ging, komt eerder aan bod (in een andere vorm)
-  const count = new Map<string, number>(); const topicOf = new Map<string, string>();
-  mistakes.forEach((m) => { const k = wordIdOf(m.exerciseId); count.set(k, (count.get(k) ?? 0) + 1); topicOf.set(k, m.topic); });
-  const lessonEx = new Map(LESSONS.flatMap((l) => l.exercises).map((e) => [e.id, e]));
-  const warmIds = new Set(words.map((w) => w.id));
-  const weak: Ex[] = []; const weakTopics = new Set<string>();
-  for (const [k] of [...count.entries()].sort((a, b) => b[1] - a[1])) {
-    if (weak.length >= 3) break;
-    const le = lessonEx.get(k); const w = VOCAB.find((v) => v.id === k);
-    if (le) { weak.push(le); weakTopics.add(topicOf.get(k) ?? ''); }
-    else if (w && !warmIds.has(w.id)) { weak.push(vocabEx(w, w.gender && Math.random() < 0.5 ? 'article' : 'recall', VOCAB)); weakTopics.add(topicOf.get(k) ?? ''); }
-  }
+  const { ex: warm, keys } = buildWordSession(facets, 8);
+  const { ex: weak, topics } = buildWeak(facets, keys, 3);
   const lesson = LESSONS.find((l) => !done.has(l.id));
   const phases: Phase[] = [{ kind: 'ex', title: 'Warming-up', ex: warm }];
   const lines = [`${warm.length} woorden herhalen of leren`];
   if (lesson) { phases.push({ kind: 'lesson', title: lesson.title, l: lesson, ex: shuffle(lesson.exercises).slice(0, 5) }); lines.push(`Nieuwe les: ${lesson.title}`); }
-  if (weak.length) { phases.push({ kind: 'ex', title: 'Aandachtspunten', ex: weak }); lines.push(`${weak.length} aandachtspunten uit je eerdere fouten (${[...weakTopics].filter(Boolean).join(', ')})`); }
+  if (weak.length) { phases.push({ kind: 'ex', title: 'Aandachtspunten', ex: weak }); lines.push(`${weak.length} aandachtspunten (${topics.join(', ')})`); }
   return { phases, lines };
 }
 

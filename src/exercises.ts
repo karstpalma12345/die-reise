@@ -1,8 +1,9 @@
 import type { Word } from './content/vocab';
+import type { Facet } from './srs';
 export interface Ex {
   id: string; kind: 'mc' | 'type' | 'order'; prompt: string; options?: string[]; answers: string[];
   explain: string; topic: string; category: 'vocabulary' | 'article' | 'verb' | 'translation' | 'sentence';
-  vocabId?: string; near?: string;
+  vocabId?: string; facet?: Facet; near?: string;
 }
 export const norm = (s: string) => s.toLowerCase().replace(/ß/g, 'ss').replace(/[.,!?"'’]/g, '').replace(/\s+/g, ' ').trim();
 export const isCorrect = (ex: Ex, given: string) => ex.answers.some((a) => norm(a) === norm(given));
@@ -11,7 +12,8 @@ export const full = (w: Word) => (w.gender ? `${w.gender} ${w.de}` : w.de);
 const info = (w: Word) => `${w.ex} – ${w.exNl}`;
 
 export function vocabEx(w: Word, kind: 'recog' | 'recall' | 'article', pool: Word[]): Ex {
-  const base = { vocabId: w.id, topic: w.topic, explain: info(w) };
+  if (kind === 'article' && !w.gender) kind = 'recog';
+  const base = { vocabId: w.id, facet: kind as Facet, topic: w.topic, explain: info(w) };
   if (kind === 'article' && w.gender)
     return { ...base, id: `${w.id}-art`, kind: 'mc', prompt: `Welk lidwoord hoort bij "${w.de}" (${w.nl})?`, options: ['der', 'die', 'das'], answers: [w.gender], category: 'article', explain: `${full(w)} = ${w.nl}${w.plural ? ` · mv. die ${w.plural}` : ''}` };
   if (kind === 'recall')
