@@ -29,4 +29,22 @@ export const TEXTS: TextItem[] = [
       q('t3-2', 'Wie is erg grappig?', ['haar broer', 'haar moeder', 'de kat'], 'haar broer', '"Mein Bruder ... ist sehr lustig."'),
       q('t3-3', 'Wat doet Mia vooral?', ['slapen', 'koken', 'zwemmen'], 'slapen', '"Sie schläft viel." (sie = de kat)'),
       q('t3-4', 'Wat vraagt Carla aan het eind?', ['of Karst broers of zussen heeft', 'waar Karst woont', 'hoe oud Karst is'], 'of Karst broers of zussen heeft', '"Geschwister" = broers en zussen.')] },
+  { id: 'txt-a1-04-cafe', unit: 'A1-04', title: 'Im Café',
+    lines: [
+      { who: 'Carla', de: 'Guten Tag! Was möchtest du, Karst?', nl: 'Goedendag! Wat wil je, Karst?' }, { who: 'Karst', de: 'Ich möchte einen Kaffee und ein Stück Kuchen, bitte.', nl: 'Ik wil graag een koffie en een stuk taart, alsjeblieft.' },
+      { who: 'Carla', de: 'Gern! Möchtest du auch Wasser?', nl: 'Graag! Wil je ook water?' }, { who: 'Karst', de: 'Nein, danke.', nl: 'Nee, bedankt.' },
+      { who: 'Carla', de: 'Hier ist dein Kaffee.', nl: 'Hier is je koffie.' }, { who: 'Karst', de: 'Danke! Der Kuchen ist sehr lecker.', nl: 'Bedankt! De taart is erg lekker.' }],
+    questions: [q('t4-1', 'Wat bestelt Karst?', ['koffie en een stuk taart', 'water en brood', 'thee en soep'], 'koffie en een stuk taart', '"einen Kaffee und ein Stück Kuchen"'),
+      q('t4-2', 'Wil Karst ook water?', ['Nee', 'Ja', 'Hij weet het niet'], 'Nee', 'Karst zegt: "Nein, danke."'),
+      q('t4-3', 'Hoe vindt Karst de taart?', ['lekker', 'koud', 'duur'], 'lekker', '"lecker" = lekker.'),
+      q('t4-4', 'Wat betekent "Hier ist dein Kaffee"?', ['Hier is je koffie.', 'Wil je koffie?', 'De koffie is heet.'], 'Hier is je koffie.', '"dein" = jouw, "hier ist" = hier is.')] },
+  { id: 'txt-a1-05-wohnung', unit: 'A1-05', title: 'Carlas Wohnung',
+    lines: [
+      { who: 'Karst', de: 'Wow, deine Wohnung ist schön!', nl: 'Wow, wat is je woning mooi!' }, { who: 'Carla', de: 'Danke! Hier ist das Wohnzimmer. Das Sofa ist neu.', nl: 'Bedankt! Hier is de woonkamer. De bank is nieuw.' },
+      { who: 'Karst', de: 'Und wo ist die Küche?', nl: 'En waar is de keuken?' }, { who: 'Carla', de: 'Die Küche ist dort. Sie ist hell und klein.', nl: 'De keuken is daar. Ze is licht en klein.' },
+      { who: 'Karst', de: 'Hast du auch einen Balkon?', nl: 'Heb je ook een balkon?' }, { who: 'Carla', de: 'Ja, der Balkon ist klein, aber gemütlich.', nl: 'Ja, het balkon is klein, maar gezellig.' }],
+    questions: [q('t5-1', 'Wat is nieuw?', ['de bank', 'de keuken', 'het balkon'], 'de bank', '"Das Sofa ist neu."'),
+      q('t5-2', 'Hoe is de keuken?', ['licht en klein', 'donker en groot', 'oud en gezellig'], 'licht en klein', '"hell und klein"'),
+      q('t5-3', 'Hoe is het balkon?', ['klein, maar gezellig', 'groot en licht', 'nieuw en duur'], 'klein, maar gezellig', '"klein, aber gemütlich"'),
+      q('t5-4', 'Wat vraagt Karst over een balkon?', ['of Carla een balkon heeft', 'hoe groot het balkon is', 'wie het balkon schoonmaakt'], 'of Carla een balkon heeft', '"Hast du auch einen Balkon?"')] },
 ];

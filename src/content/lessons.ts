@@ -65,6 +65,16 @@ export const LESSONS: Lesson[] = [
       mc('g6-3', 'Ich kaufe ___ Brot.', A, 'das', 'Bij onzijdige woorden verandert er niets: das.', 'Accusatief', 'article'), mc('g6-4', 'Ich habe ___ Bruder.', ['einen', 'ein', 'eine'], 'einen', 'Bruder is mannelijk en lijdend voorwerp: ein → einen.', 'Accusatief', 'article'),
       mc('g6-5', 'Ich habe ___ Schwester.', ['eine', 'einen', 'ein'], 'eine', 'Schwester is vrouwelijk: eine.', 'Accusatief', 'article'), mc('g6-6', '___ Tisch ist neu.', ['Der', 'Den', 'Das'], 'Der', 'Tisch is hier het onderwerp (nominatief): der.', 'Accusatief', 'article'),
       mc('g6-7', 'Ich esse ___ Apfel.', ['einen', 'ein', 'eine'], 'einen', 'Apfel is mannelijk en lijdend voorwerp: einen.', 'Accusatief', 'article'), ty('g6-8', 'Verbeter de zin: Ich habe ein Hund.', ['Ich habe einen Hund'], 'Hund is mannelijk en lijdend voorwerp: einen.', 'Accusatief', 'article')] },
+  { id: 'gram-moechten', title: 'Bestellen met "möchten"', level: 'A1', objective: 'Je kunt beleefd zeggen wat je wilt hebben of doen.',
+    sections: [
+      { h: 'Vormen', body: '"möchten" betekent "graag willen" en is beleefder dan "wollen".\n\nich möchte · du möchtest · er/sie/es möchte · wir möchten · ihr möchtet · sie/Sie möchten', examples: [['Ich möchte einen Kaffee.', 'Ik wil graag een koffie.'], ['Was möchtest du?', 'Wat wil je?'], ['Wir möchten Wasser.', 'Wij willen graag water.']] },
+      { h: 'Een tweede werkwoord', body: 'Wil je iets doen, dan staat het tweede werkwoord als infinitief helemaal aan het einde van de zin, net als bij "willen" in het Nederlands. Voor iets bestellen gebruik je het lidwoord van de vorige les: einen (der), ein (das), eine (die).', examples: [['Ich möchte Deutsch lernen.', 'Ik wil graag Duits leren.'], ['Ich möchte ein Brot.', 'Ik wil graag een brood.']] },
+    ],
+    exercises: [mc('g7-1', 'Ich ___ einen Kaffee.', ['möchte', 'möchtest', 'möchten'], 'möchte', 'Bij "ich" hoort "möchte".', 'möchten', 'verb'), mc('g7-2', 'Du ___ eine Suppe.', ['möchtest', 'möchte', 'möchtet'], 'möchtest', 'Bij "du" hoort "möchtest".', 'möchten', 'verb'),
+      mc('g7-3', 'Wir ___ Wasser.', ['möchten', 'möchte', 'möchtest'], 'möchten', 'Bij "wir" hoort "möchten".', 'möchten', 'verb'), mc('g7-4', 'Ich möchte ___ Apfel.', ['einen', 'ein', 'eine'], 'einen', 'Apfel is mannelijk en lijdend voorwerp: einen.', 'möchten', 'article'),
+      mc('g7-5', 'Ich möchte ___ Brot.', ['ein', 'einen', 'eine'], 'ein', 'Brot is onzijdig: ein.', 'möchten', 'article'), ord('g7-6', ['Ich möchte einen Kaffee'], 'Het werkwoord "möchte" staat op plek 2.', 'möchten'),
+      ord('g7-7', ['Was möchtest du'], 'W-vraag: vraagwoord, dan het werkwoord.', 'möchten'), ord('g7-8', ['Ich möchte Deutsch lernen'], 'Het tweede werkwoord (lernen) staat aan het einde.', 'möchten'),
+      ty('g7-9', 'Vertaal: Ik wil graag een thee.', ['Ich möchte einen Tee'], 'Tee is mannelijk en lijdend voorwerp: einen.', 'möchten', 'translation')] },
 ];
 const q = (id: string, prompt: string, options: string[], a: string, explain: string): Ex => ({ id: `pl-${id}`, kind: 'mc', prompt, options, answers: [a], explain, topic: 'Instaptoets', category: 'vocabulary' });
 export const PLACEMENT: Ex[] = [

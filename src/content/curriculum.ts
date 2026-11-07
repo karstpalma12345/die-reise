@@ -10,7 +10,7 @@ export const CURRICULUM: Unit[] = [
   u('A1', 1, 'Hallo!', 'Ik kan groeten en mezelf voorstellen.', ['Begroeting', 'Voorstellen', 'Kleine woorden'], ['gram-artikel', 'gram-sein']),
   u('A1', 2, 'Wie ben jij?', 'Ik kan vragen stellen over naam, herkomst en woonplaats.', ['Vraagwoorden', 'Getallen', 'Taal en leren'], ['gram-werkwoorden', 'gram-zinsbouw']),
   u('A1', 3, 'Familie en vrienden', 'Ik kan mijn familie en vrienden beschrijven.', ['Familie en vrienden', 'Bijvoeglijke naamwoorden'], ['gram-bezit']),
-  u('A1', 4, 'Eten en drinken', 'Ik kan zeggen wat ik eet en drink.', ['Eten en drinken'], ['gram-akkusativ']),
+  u('A1', 4, 'Eten en drinken', 'Ik kan zeggen wat ik eet en drink.', ['Eten en drinken'], ['gram-akkusativ', 'gram-moechten']),
   u('A1', 5, 'Thuis', 'Ik kan mijn huis en mijn spullen benoemen.', ['Huis en omgeving', 'Dieren en huis', 'Kleuren', 'Natuur en dieren']),
   u('A1', 6, 'Mijn dag', 'Ik kan vertellen wat ik op een dag doe.', ['Tijd', 'Dagelijks leven', 'Werkwoorden']),
   u('A1', 7, 'Onderweg', 'Ik kan de weg vragen en reizen regelen.', ['Stad en reizen']),
@@ -32,4 +32,5 @@ export const CURRICULUM: Unit[] = [
   u('B2', 5, 'Literatuur en kunst', 'Ik kan teksten en kunst interpreteren.'), u('B2', 6, 'Passief en formele taal', 'Ik kan passiefconstructies en formeel Duits gebruiken.'),
   u('B2', 7, 'Indirecte rede', 'Ik kan weergeven wat anderen zeggen (Konjunktiv I).'), u('B2', 8, 'Nuance en register', 'Ik kan nuances, toon en register bewust kiezen.'),
 ];
-export const unitLessonsDone = (unitId: string, done: Set<string>) => { const x = CURRICULUM.find((c) => c.id === unitId); return !!x && x.lessons.every((l) => done.has(l)); };
+// Een unit is "klaar" als de lessen van deze unit én alle eerdere units zijn afgerond.
+export const unitLessonsDone = (unitId: string, done: Set<string>) => { const i = CURRICULUM.findIndex((c) => c.id === unitId); return i >= 0 && CURRICULUM.slice(0, i + 1).every((c) => c.lessons.every((l) => done.has(l))); };
