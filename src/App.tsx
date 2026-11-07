@@ -3,6 +3,7 @@ import Home from './screens/Home';
 import Soon from './screens/Soon';
 import Learn from './screens/Learn';
 import Journey from './screens/Journey';
+import Progress from './screens/Progress';
 import { loadProfile, defaultProfile, addXp, type Profile, type Level } from './profile';
 import { requestPersistence, put } from './db';
 
@@ -29,7 +30,7 @@ export default function App() {
         {tab === 'home' && <Home profile={profile} go={setTab} />}
         {tab === 'journey' && <Journey gainXp={gainXp} onExit={() => setTab('home')} />}
         {tab === 'practice' && <Learn gainXp={gainXp} setLevel={setLevel} />}
-        {tab === 'progress' && <Soon who="karst" title="Voortgang" text="Hier zie je je niveau, je aandachtspunten en je resultaten." phase="fase 5" />}
+        {tab === 'progress' && <Progress />}
       </main>
       <nav aria-label="Hoofdmenu">
         {TABS.map((t) => (

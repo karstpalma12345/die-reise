@@ -2,9 +2,12 @@
 import { VOCAB, type Word } from './content/vocab';
 import { LESSONS } from './content/lessons';
 import { TEXTS } from './content/texts';
+import { CURRICULUM } from './content/curriculum';
 import { type Ex, vocabEx, shuffle } from './exercises';
 import { type Facet, type FacetRec, fStatus, wordStatus, dayStr } from './srs';
 type M = Map<string, FacetRec>;
+const unitOf = (t: string) => { const k = CURRICULUM.findIndex((u) => u.topics.includes(t)); return k < 0 ? 999 : k; };
+const ORDERED = [...VOCAB].sort((a, b) => unitOf(a.topic) - unitOf(b.topic)); // nieuwe woorden komen in de volgorde van de cursus
 export const requiredFacets = (w: Word): Facet[] => (w.gender ? ['recog', 'recall', 'article'] : ['recog', 'recall']);
 const rec = (m: M, w: Word, f: Facet) => m.get(`${w.id}:${f}`);
 export const dueCount = (m: M) => [...m.values()].filter((f) => f.facet !== 'ex' && f.due <= dayStr()).length;
@@ -20,8 +23,8 @@ export function buildWordSession(m: M, max: number): { ex: Ex[]; keys: Set<strin
   const add = (w: Word, facet: Facet) => { const k = `${w.id}:${facet}`; if (keys.has(k) || out.length >= max) return; keys.add(k); out.push(vocabEx(w, facet as 'recog' | 'recall' | 'article', VOCAB)); };
   due.slice(0, Math.ceil(max * 0.6)).forEach((f) => { const w = byId.get(f.item); if (w) add(w, f.facet); });
   const room = due.length > 12 ? 0 : due.length > 6 ? 1 : 3; // veel achterstand = geen of weinig nieuwe woorden
-  let fresh = 0; for (const w of VOCAB) { if (fresh >= room) break; if (!rec(m, w, 'recog')) { add(w, 'recog'); fresh++; } }
-  let intro = 0; for (const w of VOCAB) { if (intro >= 2) break; const r = rec(m, w, 'recog');           // nieuwe onderdelen van bekende woorden
+  let fresh = 0; for (const w of ORDERED) { if (fresh >= room) break; if (!rec(m, w, 'recog')) { add(w, 'recog'); fresh++; } }
+  let intro = 0; for (const w of ORDERED) { if (intro >= 2) break; const r = rec(m, w, 'recog');           // nieuwe onderdelen van bekende woorden
     if (r && r.ok >= 1 && w.gender && !rec(m, w, 'article')) { add(w, 'article'); intro++; } else if (r && r.ok >= 2 && !rec(m, w, 'recall')) { add(w, 'recall'); intro++; } }
   if (!out.length) shuffle(VOCAB).slice(0, 6).forEach((w) => add(w, rec(m, w, 'recall') ? 'recall' : 'recog')); // niets aan de beurt: extra oefenen
   return { ex: shuffle(out), keys };

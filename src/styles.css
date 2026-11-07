@@ -75,3 +75,4 @@ details{margin-top:8px}summary{font-weight:600}.stat.big{padding:20px 40px}.stat
 @keyframes pulse{0%,100%{opacity:.25}50%{opacity:1}}
 @media(prefers-reduced-motion:reduce){.ch,.ch *{animation:none!important}}
 .ln{padding:8px 0;border-bottom:1px solid color-mix(in srgb,var(--ink) 12%,transparent)}.ln summary{font-size:1.05rem}.ln span{display:block;padding-top:4px}
+.rmap{width:100%;height:auto}.stamps{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px}.stamp{display:flex;flex-direction:column;align-items:center;width:76px;font-size:1.6rem;text-align:center}.stamp small{font-size:.7rem;color:var(--muted)}.stamp.locked{opacity:.45}.chip.on{background:var(--soft)}label.link{cursor:pointer;display:inline-block}.arrive .chip{margin-left:auto}

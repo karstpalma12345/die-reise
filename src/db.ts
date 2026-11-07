@@ -50,3 +50,21 @@ export async function all<T>(store: StoreName): Promise<T[]> {
     r.onerror = () => rej(r.error);
   });
 }
+// Back-up: alle opslagvakken als [sleutel, waarde]-paren uitlezen en terugzetten (in één transactie: lukt het niet, dan blijft alles zoals het was).
+export async function dumpAll(): Promise<Record<string, [string, unknown][]>> {
+  const db = await open(); const out: Record<string, [string, unknown][]> = {};
+  for (const s of STORES) out[s] = await new Promise<[string, unknown][]>((res, rej) => {
+    const rows: [string, unknown][] = []; const c = db.transaction(s).objectStore(s).openCursor();
+    c.onsuccess = () => { const cur = c.result; if (cur) { rows.push([String(cur.key), cur.value]); cur.continue(); } else res(rows); };
+    c.onerror = () => rej(c.error);
+  });
+  return out;
+}
+export async function restoreAll(data: Record<string, [string, unknown][]>): Promise<void> {
+  const db = await open();
+  await new Promise<void>((res, rej) => {
+    const tx = db.transaction([...STORES], 'readwrite');
+    for (const s of STORES) { const os = tx.objectStore(s); os.clear(); for (const [k, v] of data[s] ?? []) os.put(v, k); }
+    tx.oncomplete = () => res(); tx.onerror = () => rej(tx.error); tx.onabort = () => rej(tx.error);
+  });
+}
