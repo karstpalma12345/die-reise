@@ -1,6 +1,6 @@
 import { MORE } from './vocab-more';
 // Woordenlijst. Nieuwe woorden toevoegen = een regel toevoegen aan RAW. Geen andere code aanpassen.
-export interface Word { id: string; de: string; nl: string; type: 'noun' | 'verb' | 'adj' | 'phrase'; gender?: 'der' | 'die' | 'das'; plural?: string; ex: string; exNl: string; level: 'A0' | 'A1'; topic: string; }
+export interface Word { id: string; de: string; nl: string; type: 'noun' | 'verb' | 'adj' | 'phrase'; gender?: 'der' | 'die' | 'das'; plural?: string; ex: string; exNl: string; level: 'A0' | 'A1' | 'A2' | 'B1' | 'B2'; topic: string; }
 type R = [string, string, Word['type'], string, string, string, string, string]; // de, nl, type, gender|'', plural, ex, exNl, topic
 const RAW: R[] = [
   ['Hallo', 'hallo', 'phrase', '', '', 'Hallo, ich bin Carla.', 'Hallo, ik ben Carla.', 'Begroeting'],

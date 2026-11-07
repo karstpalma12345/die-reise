@@ -3,8 +3,8 @@
 // soort: 'der' | 'die' | 'das' (zelfstandig naamwoord) | 'v' werkwoord | 'a' bijvoeglijk naamwoord | 'p' zin/overig
 type Kind = 'der' | 'die' | 'das' | 'v' | 'a' | 'p';
 type Row = [string, string, Kind, string, string, string];
-export type MoreRow = [string, string, 'noun' | 'verb' | 'adj' | 'phrase', string, string, string, string, string, 'A0' | 'A1'];
-const t = (topic: string, level: 'A0' | 'A1', rows: Row[]): MoreRow[] => rows.map(([de, nl, k, pl, ex, exNl]) => [de, nl, k === 'v' ? 'verb' : k === 'a' ? 'adj' : k === 'p' ? 'phrase' : 'noun', k === 'der' || k === 'die' || k === 'das' ? k : '', pl, ex, exNl, topic, level]);
+export type MoreRow = [string, string, 'noun' | 'verb' | 'adj' | 'phrase', string, string, string, string, string, 'A0' | 'A1' | 'A2' | 'B1' | 'B2'];
+const t = (topic: string, level: 'A0' | 'A1' | 'A2' | 'B1' | 'B2', rows: Row[]): MoreRow[] => rows.map(([de, nl, k, pl, ex, exNl]) => [de, nl, k === 'v' ? 'verb' : k === 'a' ? 'adj' : k === 'p' ? 'phrase' : 'noun', k === 'der' || k === 'die' || k === 'das' ? k : '', pl, ex, exNl, topic, level]);
 
 export const MORE: MoreRow[] = [
   ...t('Getallen', 'A0', [
@@ -124,4 +124,34 @@ export const MORE: MoreRow[] = [
     ['aufräumen', 'opruimen', 'v', '', 'Ich räume die Küche auf.', 'Ik ruim de keuken op.'], ['anfangen', 'beginnen', 'v', '', 'Der Kurs fängt um acht Uhr an.', 'De cursus begint om acht uur.'],
     ['mitkommen', 'meekomen', 'v', '', 'Kommst du mit?', 'Kom je mee?'], ['aufwachen', 'wakker worden', 'v', '', 'Ich wache früh auf.', 'Ik word vroeg wakker.'],
     ['ankommen', 'aankomen', 'v', '', 'Der Zug kommt um acht Uhr an.', 'De trein komt om acht uur aan.'], ['duschen', 'douchen', 'v', '', 'Ich dusche am Morgen.', 'Ik douche in de ochtend.'], ['frühstücken', 'ontbijten', 'v', '', 'Wir frühstücken um acht Uhr.', 'Wij ontbijten om acht uur.']]),
+  ...t('Stad en reizen', 'A1', [
+    ['Haltestelle', 'halte', 'die', 'Haltestellen', 'Die Haltestelle ist hier.', 'De halte is hier.'], ['Bus', 'bus', 'der', 'Busse', 'Der Bus kommt gleich.', 'De bus komt zo.'], ['Fahrkarte', 'vervoersbewijs', 'die', 'Fahrkarten', 'Eine Fahrkarte, bitte.', 'Een kaartje, alsjeblieft.'],
+    ['Flughafen', 'vliegveld', 'der', 'Flughäfen', 'Der Flughafen ist groß.', 'Het vliegveld is groot.'], ['Koffer', 'koffer', 'der', 'Koffer', 'Mein Koffer ist schwer.', 'Mijn koffer is zwaar.'], ['Hotel', 'hotel', 'das', 'Hotels', 'Das Hotel ist teuer.', 'Het hotel is duur.'],
+    ['weit', 'ver', 'a', '', 'Der Bahnhof ist weit.', 'Het station is ver.'], ['nah', 'dichtbij', 'a', '', 'Das Hotel ist nah.', 'Het hotel is dichtbij.'], ['links', 'links', 'p', '', 'Das Hotel ist links.', 'Het hotel is links.'], ['rechts', 'rechts', 'p', '', 'Der Bahnhof ist rechts.', 'Het station is rechts.'],
+    ['geradeaus', 'rechtdoor', 'p', '', 'Gehen Sie geradeaus.', 'Ga rechtdoor.'], ['nehmen', 'nemen', 'v', '', 'Ich nehme den Bus.', 'Ik neem de bus.'], ['fahren', 'rijden, reizen', 'v', '', 'Wir fahren nach Berlin.', 'Wij reizen naar Berlijn.']]),
+  ...t('Gevoelens', 'A1', [
+    ['Hunger', 'honger', 'der', '', 'Ich habe Hunger.', 'Ik heb honger.'], ['Durst', 'dorst', 'der', '', 'Ich habe Durst.', 'Ik heb dorst.'], ['Fieber', 'koorts', 'das', '', 'Ich habe Fieber.', 'Ik heb koorts.'],
+    ['Erkältung', 'verkoudheid', 'die', 'Erkältungen', 'Ich habe eine Erkältung.', 'Ik ben verkouden.'], ['Arzt', 'dokter (arts)', 'der', 'Ärzte', 'Der Arzt ist nett.', 'De dokter is aardig.'], ['wehtun', 'pijn doen', 'v', '', 'Mein Kopf tut weh.', 'Mijn hoofd doet pijn.'], ['gesund', 'gezond', 'a', '', 'Ich bin gesund.', 'Ik ben gezond.']]),
+  ...t('Lichaam', 'A1', [
+    ['Bauch', 'buik', 'der', 'Bäuche', 'Mein Bauch tut weh.', 'Mijn buik doet pijn.'], ['Rücken', 'rug', 'der', 'Rücken', 'Mein Rücken tut weh.', 'Mijn rug doet pijn.'], ['Zahn', 'tand', 'der', 'Zähne', 'Mein Zahn tut weh.', 'Mijn tand doet pijn.']]),
+  ...t('Werk', 'A1', [
+    ['Lehrer', 'leraar', 'der', 'Lehrer', 'Mein Vater ist Lehrer.', 'Mijn vader is leraar.'], ['Lehrerin', 'lerares', 'die', 'Lehrerinnen', 'Meine Mutter ist Lehrerin.', 'Mijn moeder is lerares.'], ['Koch', 'kok', 'der', 'Köche', 'Der Koch kocht Suppe.', 'De kok kookt soep.'],
+    ['Student', 'student', 'der', 'Studenten', 'Karst ist Student.', 'Karst is student.'], ['Studentin', 'studente', 'die', 'Studentinnen', 'Meine Schwester ist Studentin.', 'Mijn zus is studente.'], ['Besprechung', 'vergadering', 'die', 'Besprechungen', 'Die Besprechung beginnt um zehn.', 'De vergadering begint om tien.'],
+    ['E-Mail', 'e-mail', 'die', 'E-Mails', 'Ich schreibe eine E-Mail.', 'Ik schrijf een e-mail.'], ['studieren', 'studeren', 'v', '', 'Ich studiere in Utrecht.', 'Ik studeer in Utrecht.']]),
+  ...t('Winkelen', 'A1', [
+    ['Kasse', 'kassa', 'die', 'Kassen', 'Die Kasse ist dort.', 'De kassa is daar.'], ['Tüte', 'zak, tas', 'die', 'Tüten', 'Ich brauche eine Tüte.', 'Ik heb een zak nodig.'], ['Markt', 'markt', 'der', 'Märkte', 'Der Markt ist am Samstag.', 'De markt is op zaterdag.'],
+    ['Kilo', 'kilo', 'das', 'Kilos', 'Ein Kilo Äpfel, bitte.', 'Een kilo appels, alsjeblieft.'], ['Packung', 'pak, verpakking', 'die', 'Packungen', 'Eine Packung Milch, bitte.', 'Een pak melk, alsjeblieft.'], ['Angebot', 'aanbieding', 'das', 'Angebote', 'Das ist ein Angebot.', 'Dat is een aanbieding.'], ['bar', 'contant', 'p', '', 'Ich bezahle bar.', 'Ik betaal contant.']]),
+  ...t('Getallen en prijzen', 'A1', [
+    ['elf', 'elf', 'p', '', 'Es ist elf Uhr.', 'Het is elf uur.'], ['zwölf', 'twaalf', 'p', '', 'Es ist zwölf Uhr.', 'Het is twaalf uur.'], ['zwanzig', 'twintig', 'p', '', 'Das kostet zwanzig Euro.', 'Dat kost twintig euro.'],
+    ['dreißig', 'dertig', 'p', '', 'Ich bin dreißig Jahre alt.', 'Ik ben dertig jaar oud.'], ['fünfzig', 'vijftig', 'p', '', 'Das Buch kostet fünfzig Euro.', 'Het boek kost vijftig euro.'], ['hundert', 'honderd', 'p', '', 'Hundert Euro, bitte.', 'Honderd euro, alsjeblieft.']]),
+  ...t('Hobbys', 'A1', [
+    ['Hobby', 'hobby', 'das', 'Hobbys', 'Mein Hobby ist Schwimmen.', 'Mijn hobby is zwemmen.'], ['Sport', 'sport', 'der', '', 'Ich mache gern Sport.', 'Ik sport graag.'], ['Musik', 'muziek', 'die', '', 'Ich höre gern Musik.', 'Ik luister graag naar muziek.'],
+    ['Fußball', 'voetbal', 'der', '', 'Wir spielen Fußball.', 'Wij voetballen.'], ['Film', 'film', 'der', 'Filme', 'Der Film ist lustig.', 'De film is grappig.'], ['hören', 'horen, luisteren naar', 'v', '', 'Ich höre Musik.', 'Ik luister naar muziek.'],
+    ['singen', 'zingen', 'v', '', 'Carla kann singen.', 'Carla kan zingen.'], ['tanzen', 'dansen', 'v', '', 'Wir tanzen am Samstag.', 'Wij dansen op zaterdag.'], ['üben', 'oefenen', 'v', '', 'Wir üben zusammen.', 'Wij oefenen samen.'], ['zusammen', 'samen', 'p', '', 'Wir lernen zusammen.', 'Wij leren samen.']]),
+  ...t('Modale werkwoorden', 'A1', [['dürfen', 'mogen (toestemming)', 'v', '', 'Darf ich hier sitzen?', 'Mag ik hier zitten?']]),
+  ...t('Reizen en plannen', 'A1', [
+    ['Reise', 'reis', 'die', 'Reisen', 'Die Reise ist lang.', 'De reis is lang.'], ['Plan', 'plan', 'der', 'Pläne', 'Ich habe einen Plan.', 'Ik heb een plan.'], ['Welt', 'wereld', 'die', 'Welten', 'Die Welt ist groß.', 'De wereld is groot.'],
+    ['Land', 'land', 'das', 'Länder', 'Deutschland ist ein Land.', 'Duitsland is een land.'], ['Karte', 'kaart, landkaart', 'die', 'Karten', 'Die Karte ist alt.', 'De kaart is oud.'], ['Pass', 'paspoort', 'der', 'Pässe', 'Mein Pass ist neu.', 'Mijn paspoort is nieuw.'],
+    ['reisen', 'reizen', 'v', '', 'Wir reisen gern.', 'Wij reizen graag.'], ['planen', 'plannen', 'v', '', 'Wir planen die Reise.', 'Wij plannen de reis.'], ['packen', 'inpakken', 'v', '', 'Ich packe meinen Koffer.', 'Ik pak mijn koffer in.'],
+    ['zuerst', 'eerst', 'p', '', 'Zuerst fahren wir nach Berlin.', 'Eerst reizen we naar Berlijn.'], ['dann', 'dan, daarna', 'p', '', 'Dann sehen wir viele Länder.', 'Dan zien we veel landen.']]),
 ];

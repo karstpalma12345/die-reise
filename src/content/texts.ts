@@ -61,4 +61,42 @@ export const TEXTS: TextItem[] = [
       { who: 'Carla', de: 'Manchmal schwimme ich. Manchmal schlafe ich eine Stunde.', nl: 'Soms zwem ik. Soms slaap ik een uur.' }, { who: 'Karst', de: 'Kommst du am Samstag mit?', nl: 'Kom je zaterdag mee?' }, { who: 'Carla', de: 'Ja, gern!', nl: 'Ja, graag!' }],
     questions: [q('t7-1', 'Hoe laat gaat Carla’s wekker?', ['5:30', '6:30', '6:00'], '5:30', '"halb sechs" = 5:30.'), q('t7-2', 'Wat vindt Karst van die tijd?', ['te vroeg', 'te laat', 'precies goed'], 'te vroeg', '"Das ist sehr früh!"'),
       q('t7-3', 'Wat doet Carla soms in de namiddag?', ['zwemmen of een uur slapen', 'koken', 'werken'], 'zwemmen of een uur slapen', '"Manchmal schwimme ich. Manchmal schlafe ich eine Stunde."'), q('t7-4', 'Waarmee gaat Carla akkoord?', ['zaterdag meekomen', 'vroeg opstaan', 'tv kijken'], 'zaterdag meekomen', '"Kommst du am Samstag mit?" – "Ja, gern!"')] },
+  { id: 'txt-a1-07-bahnhof', unit: 'A1-07', title: 'Wo ist der Bahnhof?',
+    lines: [
+      { who: 'Karst', de: 'Entschuldigung, wo ist der Bahnhof?', nl: 'Pardon, waar is het station?' }, { who: 'Carla', de: 'Gehen Sie geradeaus und dann links.', nl: 'Ga rechtdoor en dan naar links.' },
+      { who: 'Karst', de: 'Ist das weit?', nl: 'Is dat ver?' }, { who: 'Carla', de: 'Nein, nur fünf Minuten.', nl: 'Nee, maar vijf minuten.' }, { who: 'Karst', de: 'Danke schön!', nl: 'Hartelijk dank!' }],
+    questions: [q('t8-1', 'Waar vraagt Karst naar?', ['het station', 'het hotel', 'de bushalte'], 'het station', '"Wo ist der Bahnhof?"'), q('t8-2', 'Welke weg wijst Carla?', ['rechtdoor en dan links', 'rechts en dan rechtdoor', 'links en dan rechts'], 'rechtdoor en dan links', '"geradeaus und dann links"'),
+      q('t8-3', 'Hoe ver is het?', ['vijf minuten', 'tien minuten', 'een uur'], 'vijf minuten', '"nur fünf Minuten"'), q('t8-4', 'Wat betekent "weit"?', ['ver', 'dichtbij', 'snel'], 'ver', '"weit" = ver.')] },
+  { id: 'txt-a1-08-krank', unit: 'A1-08', title: 'Karst ist krank',
+    lines: [
+      { who: 'Carla', de: 'Wie geht es dir, Karst? Du siehst müde aus.', nl: 'Hoe gaat het, Karst? Je ziet er moe uit.' }, { who: 'Karst', de: 'Mir geht es nicht gut. Ich habe Fieber und mein Kopf tut weh.', nl: 'Het gaat niet goed met me. Ik heb koorts en mijn hoofd doet pijn.' },
+      { who: 'Carla', de: 'Oje! Du brauchst einen Arzt.', nl: 'O jee! Je hebt een dokter nodig.' }, { who: 'Karst', de: 'Ja, ich glaube auch.', nl: 'Ja, dat denk ik ook.' }, { who: 'Carla', de: 'Ich bleibe bei dir. Gute Besserung!', nl: 'Ik blijf bij je. Beterschap!' }],
+    questions: [q('t9-1', 'Wat heeft Karst?', ['koorts en hoofdpijn', 'honger en dorst', 'buikpijn'], 'koorts en hoofdpijn', '"Fieber" en "mein Kopf tut weh"'), q('t9-2', 'Wat heeft Karst volgens Carla nodig?', ['een dokter', 'koffie', 'vakantie'], 'een dokter', '"Du brauchst einen Arzt."'),
+      q('t9-3', 'Hoe ziet Karst eruit?', ['moe', 'blij', 'boos'], 'moe', '"Du siehst müde aus."'), q('t9-4', 'Wat betekent "Gute Besserung"?', ['Beterschap!', 'Goede reis!', 'Veel plezier!'], 'Beterschap!', '"Gute Besserung" wens je iemand die ziek is.')] },
+  { id: 'txt-a1-09-beruf', unit: 'A1-09', title: 'Was bist du von Beruf?',
+    lines: [
+      { who: 'Carla', de: 'Was bist du von Beruf, Karst?', nl: 'Wat ben je van beroep, Karst?' }, { who: 'Karst', de: 'Ich bin Student. Ich lerne Deutsch. Und du?', nl: 'Ik ben student. Ik leer Duits. En jij?' },
+      { who: 'Carla', de: 'Ich bin Lehrerin. Meine Kollegen sind sehr nett.', nl: 'Ik ben lerares. Mijn collega’s zijn erg aardig.' }, { who: 'Karst', de: 'Hast du heute einen Termin?', nl: 'Heb je vandaag een afspraak?' },
+      { who: 'Carla', de: 'Ja, um zehn Uhr habe ich eine Besprechung.', nl: 'Ja, om tien uur heb ik een vergadering.' }],
+    questions: [q('t10-1', 'Wat is Karst van beroep?', ['student', 'leraar', 'kok'], 'student', '"Ich bin Student."'), q('t10-2', 'Wat is Carla van beroep?', ['lerares', 'studente', 'dokter'], 'lerares', '"Ich bin Lehrerin."'),
+      q('t10-3', 'Hoe zijn Carla’s collega’s?', ['erg aardig', 'erg druk', 'erg streng'], 'erg aardig', '"sehr nett"'), q('t10-4', 'Hoe laat is Carla’s vergadering?', ['10:00', '9:00', '11:00'], '10:00', '"um zehn Uhr"')] },
+  { id: 'txt-a1-10-markt', unit: 'A1-10', title: 'Auf dem Markt',
+    lines: [
+      { who: 'Karst', de: 'Guten Tag! Ein Kilo Äpfel, bitte.', nl: 'Goedendag! Een kilo appels, alsjeblieft.' }, { who: 'Carla', de: 'Gern! Das macht zwei Euro fünfzig.', nl: 'Graag! Dat is twee euro vijftig.' },
+      { who: 'Karst', de: 'Und eine Flasche Milch. Was kostet die?', nl: 'En een fles melk. Wat kost die?' }, { who: 'Carla', de: 'Die kostet einen Euro zwanzig.', nl: 'Die kost een euro twintig.' }, { who: 'Karst', de: 'Danke. Ich bezahle bar.', nl: 'Bedankt. Ik betaal contant.' }],
+    questions: [q('t11-1', 'Wat kost een kilo appels?', ['2,50 euro', '1,20 euro', '5,00 euro'], '2,50 euro', '"zwei Euro fünfzig"'), q('t11-2', 'Wat kost de fles melk?', ['1,20 euro', '2,50 euro', '12 euro'], '1,20 euro', '"einen Euro zwanzig"'),
+      q('t11-3', 'Hoe betaalt Karst?', ['contant', 'met een kaart', 'hij betaalt niet'], 'contant', '"Ich bezahle bar."'), q('t11-4', 'Wat bestelt Karst naast appels?', ['een fles melk', 'een brood', 'een kilo kaas'], 'een fles melk', '"eine Flasche Milch"')] },
+  { id: 'txt-a1-11-koennen', unit: 'A1-11', title: 'Was kannst du?',
+    lines: [
+      { who: 'Carla', de: 'Was kannst du gut, Karst?', nl: 'Waar ben je goed in, Karst?' }, { who: 'Karst', de: 'Ich kann gut schwimmen. Aber ich kann nicht singen.', nl: 'Ik kan goed zwemmen. Maar ik kan niet zingen.' },
+      { who: 'Carla', de: 'Ich kann singen, aber ich kann nicht tanzen.', nl: 'Ik kan zingen, maar ik kan niet dansen.' }, { who: 'Karst', de: 'Wir müssen zusammen üben!', nl: 'We moeten samen oefenen!' }, { who: 'Carla', de: 'Gute Idee! Ich will am Samstag tanzen.', nl: 'Goed idee! Ik wil zaterdag dansen.' }],
+    questions: [q('t12-1', 'Wat kan Karst goed?', ['zwemmen', 'zingen', 'dansen'], 'zwemmen', '"Ich kann gut schwimmen."'), q('t12-2', 'Wat kan Carla niet?', ['dansen', 'zingen', 'zwemmen'], 'dansen', '"ich kann nicht tanzen"'),
+      q('t12-3', 'Wat moeten ze samen doen?', ['oefenen', 'koken', 'reizen'], 'oefenen', '"Wir müssen zusammen üben!"'), q('t12-4', 'Wanneer wil Carla dansen?', ['zaterdag', 'zondag', 'vrijdag'], 'zaterdag', '"am Samstag"')] },
+  { id: 'txt-a1-12-reise', unit: 'A1-12', title: 'Die große Reise',
+    lines: [
+      { who: 'Carla', de: 'Karst, ich habe einen Plan! Wir reisen um die Welt.', nl: 'Karst, ik heb een plan! We reizen de wereld rond.' }, { who: 'Karst', de: 'Um die Welt? Das ist weit!', nl: 'De hele wereld rond? Dat is ver!' },
+      { who: 'Carla', de: 'Ja! Zuerst fahren wir nach Berlin.', nl: 'Ja! Eerst reizen we naar Berlijn.' }, { who: 'Karst', de: 'Und dann?', nl: 'En dan?' }, { who: 'Carla', de: 'Dann sehen wir viele Länder. Pack deinen Koffer!', nl: 'Dan zien we veel landen. Pak je koffer!' },
+      { who: 'Karst', de: 'Ich packe schon! Aber ich muss noch viel Deutsch lernen.', nl: 'Ik pak al in! Maar ik moet nog veel Duits leren.' }],
+    questions: [q('t13-1', 'Wat is Carla’s plan?', ['de wereld rondreizen', 'naar huis gaan', 'een café openen'], 'de wereld rondreizen', '"Wir reisen um die Welt."'), q('t13-2', 'Waar gaan ze eerst naartoe?', ['Berlijn', 'Wenen', 'Amsterdam'], 'Berlijn', '"Zuerst fahren wir nach Berlin."'),
+      q('t13-3', 'Wat moet Karst nog doen?', ['veel Duits leren', 'zijn paspoort halen', 'een kaart kopen'], 'veel Duits leren', '"Ich muss noch viel Deutsch lernen."'), q('t13-4', 'Wat betekent "Pack deinen Koffer!"?', ['Pak je koffer!', 'Koop een koffer!', 'Waar is je koffer?'], 'Pak je koffer!', 'Opdracht aan "du": Pack!')] },
 ];
