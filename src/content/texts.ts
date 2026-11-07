@@ -47,4 +47,18 @@ export const TEXTS: TextItem[] = [
       q('t5-2', 'Hoe is de keuken?', ['licht en klein', 'donker en groot', 'oud en gezellig'], 'licht en klein', '"hell und klein"'),
       q('t5-3', 'Hoe is het balkon?', ['klein, maar gezellig', 'groot en licht', 'nieuw en duur'], 'klein, maar gezellig', '"klein, aber gemütlich"'),
       q('t5-4', 'Wat vraagt Karst over een balkon?', ['of Carla een balkon heeft', 'hoe groot het balkon is', 'wie het balkon schoonmaakt'], 'of Carla een balkon heeft', '"Hast du auch einen Balkon?"')] },
+  { id: 'txt-a1-06-tag', unit: 'A1-06', title: 'Karsts Tag',
+    lines: [
+      { who: 'Karst', de: 'Mein Tag beginnt um sieben Uhr.', nl: 'Mijn dag begint om zeven uur.' }, { who: 'Karst', de: 'Ich stehe auf und dusche.', nl: 'Ik sta op en douche.' },
+      { who: 'Karst', de: 'Um acht Uhr frühstücke ich. Ich trinke immer Kaffee.', nl: 'Om acht uur ontbijt ik. Ik drink altijd koffie.' }, { who: 'Karst', de: 'Am Nachmittag lerne ich Deutsch.', nl: 'In de namiddag leer ik Duits.' },
+      { who: 'Karst', de: 'Am Abend sehe ich fern.', nl: 'S avonds kijk ik tv.' }, { who: 'Karst', de: 'Und du, Carla? Wie ist dein Tag?', nl: 'En jij, Carla? Hoe is jouw dag?' }],
+    questions: [q('t6-1', 'Hoe laat begint Karsts dag?', ['om zeven uur', 'om acht uur', 'om negen uur'], 'om zeven uur', '"Mein Tag beginnt um sieben Uhr."'), q('t6-2', 'Wat drinkt Karst altijd?', ['koffie', 'thee', 'water'], 'koffie', '"Ich trinke immer Kaffee."'),
+      q('t6-3', 'Wat doet Karst in de namiddag?', ['Duits leren', 'tv kijken', 'boodschappen doen'], 'Duits leren', '"Am Nachmittag lerne ich Deutsch."'), q('t6-4', 'Wat betekent "Ich sehe fern"?', ['Ik kijk tv.', 'Ik zie ver.', 'Ik ga naar huis.'], 'Ik kijk tv.', '"fernsehen" = tv kijken (gesplitst: sehe … fern).')] },
+  { id: 'txt-a1-06-carla', unit: 'A1-06', title: 'Carlas Tag',
+    lines: [
+      { who: 'Carla', de: 'Mein Wecker klingelt um halb sechs.', nl: 'Mijn wekker gaat om half zes.' }, { who: 'Karst', de: 'Um halb sechs? Das ist sehr früh!', nl: 'Om half zes? Dat is erg vroeg!' },
+      { who: 'Carla', de: 'Ja, aber am Nachmittag habe ich Pause.', nl: 'Ja, maar in de namiddag heb ik pauze.' }, { who: 'Karst', de: 'Was machst du dann?', nl: 'Wat doe je dan?' },
+      { who: 'Carla', de: 'Manchmal schwimme ich. Manchmal schlafe ich eine Stunde.', nl: 'Soms zwem ik. Soms slaap ik een uur.' }, { who: 'Karst', de: 'Kommst du am Samstag mit?', nl: 'Kom je zaterdag mee?' }, { who: 'Carla', de: 'Ja, gern!', nl: 'Ja, graag!' }],
+    questions: [q('t7-1', 'Hoe laat gaat Carla’s wekker?', ['5:30', '6:30', '6:00'], '5:30', '"halb sechs" = 5:30.'), q('t7-2', 'Wat vindt Karst van die tijd?', ['te vroeg', 'te laat', 'precies goed'], 'te vroeg', '"Das ist sehr früh!"'),
+      q('t7-3', 'Wat doet Carla soms in de namiddag?', ['zwemmen of een uur slapen', 'koken', 'werken'], 'zwemmen of een uur slapen', '"Manchmal schwimme ich. Manchmal schlafe ich eine Stunde."'), q('t7-4', 'Waarmee gaat Carla akkoord?', ['zaterdag meekomen', 'vroeg opstaan', 'tv kijken'], 'zaterdag meekomen', '"Kommst du am Samstag mit?" – "Ja, gern!"')] },
 ];

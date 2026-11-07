@@ -75,6 +75,36 @@ export const LESSONS: Lesson[] = [
       mc('g7-5', 'Ich möchte ___ Brot.', ['ein', 'einen', 'eine'], 'ein', 'Brot is onzijdig: ein.', 'möchten', 'article'), ord('g7-6', ['Ich möchte einen Kaffee'], 'Het werkwoord "möchte" staat op plek 2.', 'möchten'),
       ord('g7-7', ['Was möchtest du'], 'W-vraag: vraagwoord, dan het werkwoord.', 'möchten'), ord('g7-8', ['Ich möchte Deutsch lernen'], 'Het tweede werkwoord (lernen) staat aan het einde.', 'möchten'),
       ty('g7-9', 'Vertaal: Ik wil graag een thee.', ['Ich möchte einen Tee'], 'Tee is mannelijk en lijdend voorwerp: einen.', 'möchten', 'translation')] },
+  { id: 'gram-esgibt', title: '"Es gibt" – er is, er zijn', level: 'A1', objective: 'Je kunt zeggen wat er is (of niet is) in een ruimte.',
+    sections: [
+      { h: 'Es gibt + accusatief', body: '"Es gibt" betekent "er is" of "er zijn". Wat erna komt is een lijdend voorwerp, dus je gebruikt de accusatiefvormen: einen (der), ein (das), eine (die). Ontkennen doe je met keinen / kein / keine. Een vraag begint met "Gibt es …?"', examples: [['Es gibt einen Balkon.', 'Er is een balkon.'], ['Es gibt ein Sofa.', 'Er is een bank.'], ['Es gibt keine Katze.', 'Er is geen kat.'], ['Gibt es einen Garten?', 'Is er een tuin?']] },
+    ],
+    exercises: [mc('g8-1', 'Es gibt ___ Balkon.', ['einen', 'ein', 'eine'], 'einen', 'Balkon is mannelijk: einen.', 'Es gibt', 'article'), mc('g8-2', 'Es gibt ___ Lampe.', ['eine', 'einen', 'ein'], 'eine', 'Lampe is vrouwelijk: eine.', 'Es gibt', 'article'),
+      mc('g8-3', 'Es gibt ___ Sofa.', ['ein', 'einen', 'eine'], 'ein', 'Sofa is onzijdig: ein.', 'Es gibt', 'article'), mc('g8-4', 'Es gibt ___ Schrank. (geen)', ['keinen', 'kein', 'keine'], 'keinen', 'Schrank is mannelijk: keinen.', 'Es gibt', 'article'),
+      mc('g8-5', 'Es gibt ___ Tür. (geen)', ['keine', 'keinen', 'kein'], 'keine', 'Tür is vrouwelijk: keine.', 'Es gibt', 'article'), ord('g8-6', ['Gibt es einen Garten'], 'Een vraag begint met het werkwoord.', 'Es gibt'),
+      ty('g8-7', 'Vertaal: Er is een tuin.', ['Es gibt einen Garten'], 'Garten is mannelijk: einen.', 'Es gibt', 'translation'), ty('g8-8', 'Vertaal: Er is geen kat.', ['Es gibt keine Katze'], 'Katze is vrouwelijk: keine.', 'Es gibt', 'translation')] },
+  { id: 'gram-trennbar', title: 'Trennbare Verben (gesplitste werkwoorden)', level: 'A1', objective: 'Je kunt werkwoorden als aufstehen en einkaufen goed gebruiken.',
+    sections: [
+      { h: 'Het voorvoegsel splitst', body: 'Net als in het Nederlands ("opstaan → ik sta op") hebben veel Duitse werkwoorden een voorvoegsel dat loskomt. In een gewone zin staat het vervoegde werkwoord op plek 2 en het voorvoegsel helemaal aan het einde.', examples: [['Ich stehe um sieben Uhr auf.', 'Ik sta om zeven uur op.'], ['Wir kaufen im Supermarkt ein.', 'Wij doen boodschappen in de supermarkt.'], ['Carla ruft Karst an.', 'Carla belt Karst.'], ['Kommst du mit?', 'Kom je mee?']] },
+      { h: 'In de infinitief blijft het heel', body: 'Na "möchten", "können" en dergelijke staat het werkwoord als infinitief aan het einde, en dan blijft het voorvoegsel eraan vast: Ich möchte früh aufstehen. Veelvoorkomende voorvoegsels: an-, auf-, ein-, fern-, mit-.' },
+    ],
+    exercises: [ord('g9-1', ['Ich stehe um sieben Uhr auf'], 'Werkwoord op plek 2, voorvoegsel "auf" aan het einde.', 'Trennbare Verben'), ord('g9-2', ['Wir kaufen im Supermarkt ein'], '"einkaufen" splitst: kaufen … ein.', 'Trennbare Verben'),
+      ord('g9-3', ['Kommst du mit'], '"mitkommen" in een vraag: Kommst du … mit?', 'Trennbare Verben'), mc('g9-4', 'Carla ruft Karst ___. (anrufen)', ['an', 'auf', 'ein'], 'an', 'anrufen → ruft … an.', 'Trennbare Verben', 'verb'),
+      mc('g9-5', 'Der Kurs fängt um acht Uhr ___. (anfangen)', ['an', 'aus', 'mit'], 'an', 'anfangen → fängt … an.', 'Trennbare Verben', 'verb'), mc('g9-6', 'Der Zug kommt um zehn Uhr ___. (ankommen)', ['an', 'auf', 'mit'], 'an', 'ankommen → kommt … an.', 'Trennbare Verben', 'verb'),
+      mc('g9-7', 'Ich möchte früh ___. (opstaan)', ['aufstehen', 'stehen auf', 'auf stehen'], 'aufstehen', 'Na "möchten" blijft het werkwoord heel: aufstehen.', 'Trennbare Verben', 'verb'),
+      ty('g9-8', 'Vertaal: Ik sta om zeven uur op.', ['Ich stehe um sieben Uhr auf'], 'Werkwoord op plek 2, "auf" aan het einde.', 'Trennbare Verben', 'translation'),
+      ty('g9-9', 'Verbeter de zin: Ich aufstehe um sieben Uhr.', ['Ich stehe um sieben Uhr auf'], 'Het voorvoegsel splitst en gaat naar het einde.', 'Trennbare Verben', 'sentence')] },
+  { id: 'gram-uhrzeit', title: 'Uhrzeit en dagindeling', level: 'A1', objective: 'Je kunt de tijd vragen en zeggen, en vertellen wanneer je iets doet.',
+    sections: [
+      { h: 'Hoe laat is het?', body: 'Vraag: "Wie spät ist es?" of "Wie viel Uhr ist es?" Antwoord: "Es ist drei Uhr." Met "um" zeg je wanneer iets gebeurt: "Um acht Uhr frühstücken wir." Na "um acht Uhr" staat het werkwoord op plek 2.', examples: [['Es ist drei Uhr.', 'Het is drie uur.'], ['Um acht Uhr frühstücken wir.', 'Om acht uur ontbijten wij.']] },
+      { h: 'Half, kwart, over en voor', body: '"halb acht" is 7:30, net als in het Nederlands "half acht". Verder: Viertel nach sieben = kwart over zeven (7:15), Viertel vor acht = kwart voor acht (7:45), zehn vor acht = tien voor acht (7:50), fünf nach sieben = vijf over zeven (7:05).', examples: [['Es ist halb acht.', 'Het is half acht (7:30).'], ['Es ist Viertel nach sieben.', 'Het is kwart over zeven.']] },
+      { h: 'Dagdelen en frequentie', body: 'am Morgen (in de ochtend), am Mittag, am Nachmittag, am Abend, in der Nacht. Frequentie: immer (altijd), oft (vaak), manchmal (soms), nie (nooit). Ze staan vaak vlak na het werkwoord: Ich trinke immer Kaffee.' },
+    ],
+    exercises: [mc('g10-1', 'Es ist halb acht. Hoe laat is het?', ['7:30', '8:30', '8:00'], '7:30', '"halb acht" = half acht = 7:30, net als in het Nederlands.', 'Uhrzeit', 'vocabulary'), mc('g10-2', 'Viertel nach sieben is:', ['7:15', '6:45', '7:45'], '7:15', 'Viertel nach = kwart over.', 'Uhrzeit', 'vocabulary'),
+      mc('g10-3', 'Zehn vor acht is:', ['7:50', '8:10', '7:10'], '7:50', 'zehn vor = tien voor.', 'Uhrzeit', 'vocabulary'), mc('g10-4', 'Wat betekent "Um neun Uhr"?', ['om negen uur', 'negen uur lang', 'rond negen'], 'om negen uur', '"um" geeft het tijdstip aan.', 'Uhrzeit', 'vocabulary'),
+      mc('g10-5', 'Hoe laat is het? Wie ___ ist es?', ['spät', 'groß', 'alt'], 'spät', '"Wie spät ist es?" = hoe laat is het?', 'Uhrzeit', 'sentence'), ord('g10-6', ['Um acht Uhr frühstücken wir'], 'Na "Um acht Uhr" staat het werkwoord op plek 2.', 'Uhrzeit'),
+      ord('g10-7', ['Es ist halb neun'], 'halb neun = 8:30.', 'Uhrzeit'), ty('g10-8', 'Vertaal: Het is half negen.', ['Es ist halb neun'], '"halb neun" = 8:30.', 'Uhrzeit', 'translation'),
+      ty('g10-9', 'Vertaal: Ik begin om negen uur.', ['Ich fange um neun Uhr an', 'Ich beginne um neun Uhr'], 'anfangen splitst: fange … an. Beginnen kan ook.', 'Uhrzeit', 'translation')] },
 ];
 const q = (id: string, prompt: string, options: string[], a: string, explain: string): Ex => ({ id: `pl-${id}`, kind: 'mc', prompt, options, answers: [a], explain, topic: 'Instaptoets', category: 'vocabulary' });
 export const PLACEMENT: Ex[] = [
