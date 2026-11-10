@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
-import { type Ex, type Grade, grade, norm } from '../exercises';
+import { type Ex, type Grade, grade, norm, sayText } from '../exercises';
+import { speak, speechOk, stopSpeaking } from '../speech';
 import { addReport } from '../reports';
 import { Karst, Carla, type Mood } from '../components/Characters';
 export interface Wrong { prompt: string; correct: string; explain: string }
@@ -22,6 +23,7 @@ export default function Practice({ title, exercises, onAnswer, onDone, onExit, s
   };
   useEffect(() => { if (res && res !== 'wrong' && showFeedback) { const t = setTimeout(() => next(), AUTO[res]); return () => clearTimeout(t); } }, [res, i]); // eslint-disable-line
   useEffect(() => { if (ex.kind === 'type') inputRef.current?.focus(); }, [i]); // eslint-disable-line
+  useEffect(() => { if (ex.listen && speechOk) speak(ex.speak ?? ''); return () => stopSpeaking(); }, [i]); // eslint-disable-line
   // Automatisch controleren: direct bij een goed of bijna goed antwoord; anders na 2 seconden stilte (als er genoeg is getypt).
   useEffect(() => {
     if (ex.kind !== 'type' || res !== null || !given.trim()) return;
@@ -44,6 +46,8 @@ export default function Practice({ title, exercises, onAnswer, onDone, onExit, s
       <div className="row"><button className="link" onClick={onExit}>← Stoppen</button>{!hideTitle && <span className="muted">{title} · {i + 1}/{exercises.length}</span>}<div className="react" key={`${i}-${res}`}><Karst size={52} mood={km} /><Carla size={52} mood={cm} delay="0.15s" /></div></div>
       <div className="bar"><i style={{ width: ((offset + i) / total) * 100 + '%' }} /></div>
       <div className="card"><h2 className="q">{ex.prompt}</h2>
+        {speechOk && sayText(ex, res !== null) && <div className="audio"><button className="chip" onClick={() => speak(sayText(ex, true)!)}>🔊 Luister</button><button className="chip" onClick={() => speak(sayText(ex, true)!, true)}>🐢 Langzaam</button></div>}
+        {ex.listen && !speechOk && <p className="muted">Spraak wordt op dit apparaat niet ondersteund. Gebruik een andere oefening.</p>}
         {ex.kind === 'order' ? orderUI : ex.kind === 'mc' ? <div className="opts">{ex.options!.map((o) => <button key={o} className={'opt' + (res !== null && grade(ex, o) !== 'wrong' ? ' ok' : '')} disabled={res !== null} onClick={() => submit(o)}>{o}</button>)}</div>
           : <form onSubmit={(e) => { e.preventDefault(); submit(given); }}><input ref={inputRef} className="inp" value={res === 'wrong' ? '' : given} onChange={(e) => { if (res === null) setGiven(e.target.value); }} readOnly={res !== null}
               autoCapitalize={/^[a-zäöüß]/.test(ex.answers[0]) ? 'off' : 'sentences'} autoCorrect="off" spellCheck={false} enterKeyHint="done" placeholder="Typ je antwoord" aria-label="Antwoord" />

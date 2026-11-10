@@ -6,6 +6,7 @@ import Journey from './screens/Journey';
 import Progress from './screens/Progress';
 import { loadProfile, defaultProfile, addXp, type Profile, type Level } from './profile';
 import { requestPersistence, put } from './db';
+import { registerSW, applyUpdate } from './sw';
 
 export type Tab = 'home' | 'journey' | 'practice' | 'progress';
 const TABS: { id: Tab; label: string; icon: string }[] = [
@@ -17,6 +18,9 @@ export default function App() {
   const [tab, setTab] = useState<Tab>('home');
   const [profile, setProfile] = useState<Profile>(defaultProfile());
   const [error, setError] = useState('');
+  const [upd, setUpd] = useState<ServiceWorker | null>(null);
+  const [online, setOnline] = useState(navigator.onLine);
+  useEffect(() => { registerSW(setUpd); const on = () => setOnline(true), off = () => setOnline(false); window.addEventListener('online', on); window.addEventListener('offline', off); return () => { window.removeEventListener('online', on); window.removeEventListener('offline', off); }; }, []);
   useEffect(() => {
     loadProfile().then(setProfile).catch(() => setError('Opslaan op dit apparaat lukt niet. Open de app in Safari (niet in privémodus).'));
     requestPersistence();
@@ -26,6 +30,8 @@ export default function App() {
   return (
     <div className="app">
       {error && <div className="error">{error}</div>}
+      {upd && <div className="update">Er is een nieuwe versie beschikbaar. <button className="chip" onClick={() => applyUpdate(upd)}>Vernieuwen</button></div>}
+      {!online && <div className="offline">Offline: je kunt gewoon verder oefenen. Je voortgang blijft op je toestel bewaard.</div>}
       <main>
         {tab === 'home' && <Home profile={profile} go={setTab} />}
         {tab === 'journey' && <Journey gainXp={gainXp} onExit={() => setTab('home')} />}

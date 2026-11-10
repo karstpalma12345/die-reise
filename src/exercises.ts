@@ -3,7 +3,7 @@ import type { Facet } from './srs';
 export interface Ex {
   id: string; kind: 'mc' | 'type' | 'order'; prompt: string; options?: string[]; answers: string[];
   explain: string; topic: string; category: 'vocabulary' | 'article' | 'verb' | 'translation' | 'sentence' | 'reading';
-  vocabId?: string; facet?: Facet; near?: string;
+  vocabId?: string; facet?: Facet; speak?: string; listen?: boolean; near?: string;
 }
 export const norm = (s: string) => s.toLowerCase().replace(/ß/g, 'ss').replace(/[.,!?"'’]/g, '').replace(/\s+/g, ' ').trim();
 export const shuffle = <T,>(a: T[]): T[] => { const r = [...a]; for (let i = r.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [r[i], r[j]] = [r[j], r[i]]; } return r; };
@@ -12,7 +12,7 @@ const info = (w: Word) => `${w.ex} – ${w.exNl}`;
 
 export function vocabEx(w: Word, kind: 'recog' | 'recall' | 'article', pool: Word[]): Ex {
   if (kind === 'article' && !w.gender) kind = 'recog';
-  const base = { vocabId: w.id, facet: kind as Facet, topic: w.topic, explain: info(w) };
+  const base = { vocabId: w.id, facet: kind as Facet, speak: kind === 'recog' ? full(w) : undefined, topic: w.topic, explain: info(w) };
   if (kind === 'article' && w.gender)
     return { ...base, id: `${w.id}-art`, kind: 'mc', prompt: `Welk lidwoord hoort bij "${w.de}" (${w.nl})?`, options: ['der', 'die', 'das'], answers: [w.gender], category: 'article', explain: `${full(w)} = ${w.nl}${w.plural ? ` · mv. die ${w.plural}` : ''}` };
   if (kind === 'recall')
@@ -38,3 +38,13 @@ export function grade(ex: Ex, given: string): Grade {
   return 'wrong';
 }
 export const isCorrect = (ex: Ex, given: string) => grade(ex, given) !== 'wrong';
+
+// Wat mag de app voorlezen? Het woord of de zin die al zichtbaar is, of (na het antwoord) de complete Duitse zin.
+const DUTCH = /\b(hoe|wat|welke|vul|vertaal|verbeter|betekent|een|het|de|dat|dit|zijn|wordt|moet|kan|niet|voor|met|naar|van|op|bij|om|wie|wanneer)\b/i;
+export function sayText(ex: Ex, answered: boolean): string | undefined {
+  if (ex.speak) return ex.speak;
+  if (!answered) return undefined;
+  if (ex.prompt.includes('___')) { const t = ex.prompt.replace(/^(Vul in|Verbeter de zin|Vertaal[^:]*):\s*/i, '').replace(/\s*\([^)]*\)/g, '').replace('___', ex.answers[0]); return DUTCH.test(t) ? undefined : t; }
+  if (ex.kind === 'order' || ex.kind === 'type') return ex.answers[0];
+  return undefined;
+}

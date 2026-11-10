@@ -3,7 +3,7 @@ import { VOCAB, type Word } from './content/vocab';
 import { LESSONS } from './content/lessons';
 import { TEXTS } from './content/texts';
 import { CURRICULUM } from './content/curriculum';
-import { type Ex, vocabEx, shuffle } from './exercises';
+import { type Ex, vocabEx, shuffle, full } from './exercises';
 import { type Facet, type FacetRec, fStatus, wordStatus, dayStr } from './srs';
 type M = Map<string, FacetRec>;
 const unitOf = (t: string) => { const k = CURRICULUM.findIndex((u) => u.topics.includes(t)); return k < 0 ? 999 : k; };
@@ -40,4 +40,15 @@ export function buildWeak(m: M, skip: Set<string>, max: number): { ex: Ex[]; top
     else { const w = byId.get(f.item); if (w) { ex.push(vocabEx(w, f.facet as 'recog' | 'recall' | 'article', VOCAB)); topics.add(w.topic); } }
   }
   return { ex, topics: [...topics] };
+}
+
+// Luisteroefeningen: hoor een woord of zin en kies de betekenis. De Duitse tekst wordt niet getoond.
+export function listenSession(m: M, n = 10): Ex[] {
+  const started = ORDERED.filter((w) => (['recog', 'recall', 'article'] as Facet[]).some((f) => m.has(`${w.id}:${f}`)));
+  const pool = started.length >= 8 ? started : ORDERED.slice(0, 40); const half = Math.ceil(n / 2);
+  const words = shuffle(pool).slice(0, half).map((w): Ex => ({ id: `${w.id}-listen`, kind: 'mc', prompt: 'Luister en kies de betekenis.', listen: true, speak: full(w), answers: [w.nl],
+    options: shuffle([w.nl, ...shuffle(pool.filter((p) => p.id !== w.id && p.type === w.type && p.nl !== w.nl)).slice(0, 3).map((p) => p.nl)]), explain: `${full(w)} = ${w.nl}`, topic: w.topic, category: 'vocabulary' }));
+  const sents = shuffle(pool.filter((w) => w.ex.split(' ').length >= 3)).slice(0, n - half).map((w): Ex => ({ id: `${w.id}-listen-s`, kind: 'mc', prompt: 'Luister naar de zin en kies de vertaling.', listen: true, speak: w.ex, answers: [w.exNl],
+    options: shuffle([w.exNl, ...shuffle(pool.filter((p) => p.id !== w.id && p.exNl !== w.exNl)).slice(0, 3).map((p) => p.exNl)]), explain: `${w.ex} – ${w.exNl}`, topic: w.topic, category: 'vocabulary' }));
+  return shuffle([...words, ...sents]);
 }

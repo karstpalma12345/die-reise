@@ -9,7 +9,8 @@ import { VOCAB } from '../content/vocab';
 import { LESSONS, PLACEMENT, type Lesson } from '../content/lessons';
 import { type FacetRec, dayStr } from '../srs';
 import { loadFacets } from '../progress';
-import { buildWordSession, wordCounts, dueCount } from '../session';
+import { buildWordSession, wordCounts, dueCount, listenSession } from '../session';
+import { speechOk } from '../speech';
 import { type Ex, vocabEx, shuffle } from '../exercises';
 import type { Level } from '../profile';
 
@@ -67,8 +68,10 @@ export default function Learn({ gainXp, setLevel }: Props) {
       <h3>Instaptoets</h3>
       <div className="card"><p>10 korte vragen om te schatten waar je begint. Je mag ook gewoon bij A0 starten.</p><button className="chip" onClick={() => setView({ t: 'place' })}>Start instaptoets</button></div>
       <div className="card"><strong>Cursusoverzicht A1–B2</strong><p>Bekijk de units, doelen en wat al beschikbaar is.</p><button className="chip" onClick={() => setCourse(true)}>Bekijk de cursus</button></div>
+      <div className="card"><strong>Luisteren</strong><p>Hoor een woord of zin in het Duits en kies de juiste betekenis. Gebruikt de stem van je toestel.</p>
+        {speechOk ? <button className="chip" onClick={() => setView({ t: 'drill', ex: listenSession(facets, 10) })}>Start luisteroefening</button> : <span className="muted">Spraak wordt op dit apparaat niet ondersteund.</span>}</div>
       <ReportsCard />
-      <div className="card"><strong>Spreken en luisteren</strong><p>Komt binnenkort: Carla spreekt woorden en zinnen uit en jij neemt jezelf op.</p></div>
+      <div className="card"><strong>Spreken</strong><p>Spreken oefen je in Mijn reis, na elke tekst: luisteren, nazeggen, opnemen en zelf beoordelen.</p></div>
     </div>
   );
 }
