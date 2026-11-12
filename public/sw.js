@@ -1,6 +1,6 @@
 // Service worker van Die Reise: de app werkt offline na het eerste bezoek.
 // Verhoog VERSION bij elke nieuwe versie, dan merkt de app dat er een update is.
-const VERSION = 'die-reise-3.2.0';
+const VERSION = 'die-reise-3.3.0';
 const CORE = ['./', './index.html', './manifest.webmanifest', './icon.svg', './icon-192.png', './icon-512.png', './apple-touch-icon.png'];
 
 self.addEventListener('install', (e) => {

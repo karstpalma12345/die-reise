@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Duo } from '../components/Characters';
 import Arrival from '../components/Arrival';
-import { loadJourney, setWeekGoal, LEVELS, type Journey, type Stop } from '../journey';
+import { loadJourney, setWeekGoal, LEVELS, type Journey, type Stop, type Souvenir } from '../journey';
 import { dumpAll, restoreAll, STORES } from '../db';
 import { APP_VERSION } from '../version';
 const MEDAL = { bronze: '🥉', silver: '🥈', gold: '🥇' };
@@ -16,7 +16,7 @@ function RouteMap({ stops }: { stops: Stop[] }) {
   </svg>;
 }
 export default function Progress() {
-  const [j, setJ] = useState<Journey | null>(null); const [lv, setLv] = useState('A1'); const [msg, setMsg] = useState('');
+  const [j, setJ] = useState<Journey | null>(null); const [lv, setLv] = useState('A1'); const [msg, setMsg] = useState(''); const [sel, setSel] = useState<Souvenir | null>(null);
   const reload = useCallback(() => { loadJourney().then((x) => { setJ(x); if (x.current) setLv(x.current.unit.level); }); }, []);
   useEffect(() => { reload(); }, [reload]);
   if (!j) return <div className="screen center"><Duo size={80} /><p className="muted">Je reis wordt berekend…</p></div>;
@@ -36,8 +36,9 @@ export default function Progress() {
         <RouteMap stops={stops} />
         {cur && <p className="muted">Volgende stop: <b>{cur.place}</b> ({cur.unit.title}) · {Math.round(cur.progress * 100)}% · nog {cur.todo.join(', ') || 'bijna klaar'}</p>}
         {stops.map((s) => <div key={s.unit.id} className={'wr' + (s.state === 'planned' ? ' locked' : '')}><b>{s.unit.id.slice(-2).replace(/^0/, '')}. {s.place} {s.medal ? MEDAL[s.medal] : ''}</b><span className="muted">{s.unit.title}{s.state === 'planned' ? ' · gepland' : ''}</span></div>)}</div>
-      <div className="card"><strong>Paspoort ({j.reached} stempels)</strong><div className="stamps">{j.stops.filter((s) => s.state === 'reached').map((s) => <span key={s.unit.id} className="stamp">{MEDAL[s.medal!]}<small>{s.place}</small></span>)}{j.reached === 0 && <span className="muted">Bereik je eerste stop voor je eerste stempel. Goud = je beheerst de woorden echt.</span>}</div></div>
-      <div className="card"><strong>Souvenirs</strong><div className="stamps">{j.souvenirs.map((s) => <span key={s.id} className={'stamp' + (s.earned ? '' : ' locked')} title={s.how}>{s.earned ? '🏅' : '🔒'}<small>{s.title}</small></span>)}</div></div>
+      <div className="card"><strong>Paspoort ({j.reached} stempels)</strong><div className="stamps">{j.stops.filter((s) => s.state === 'reached').map((s) => <span key={s.unit.id} className="stamp">{MEDAL[s.medal!]}<small>{s.place}</small><small>{s.stamp?.backfilled ? 'eerder behaald' : s.stamp?.date}</small></span>)}{j.reached === 0 && <span className="muted">Bereik je eerste stop voor je eerste stempel. Goud = je beheerst de woorden echt.</span>}</div></div>
+      <div className="card"><strong>Souvenirs</strong><div className="stamps">{j.souvenirs.map((s) => <button key={s.id} className={'stamp' + (s.earned ? '' : ' locked')} onClick={() => setSel(s)}>{s.earned ? '🏅' : '🔒'}<small>{s.title}</small></button>)}</div>
+        {sel && <p className="muted"><b>{sel.title}</b>: {sel.how}{sel.earned ? (sel.backfilled ? ' (eerder behaald)' : ` (behaald op ${sel.date})`) : ' (nog niet behaald)'}</p>}</div>
       <div className="card"><strong>Weekdoel</strong>
         <div className="pads" style={{ margin: '8px 0' }}>{j.weekDays.map((d, n) => <span key={n} className={'pad' + (d ? ' on' : '')} />)}<span className="muted">{j.weekCount} van {j.goal} dagen · {j.weekStreak} {j.weekStreak === 1 ? 'week' : 'weken'} op rij</span></div>
         <div className="quick">{[3, 4, 5, 6, 7].map((n) => <button key={n} className={'chip' + (n === j.goal ? ' on' : '')} onClick={async () => { await setWeekGoal(n); reload(); }}>{n} dagen</button>)}</div></div>
