@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import Practice, { type Wrong } from './Practice';
 import ReportsCard from './Reports';
-import Course from './Course';
 import { APP_VERSION } from '../version';
 import { recordAnswer } from '../progress';
 import { all, put } from '../db';
@@ -21,7 +20,6 @@ interface Done { id: string; done: boolean }
 
 export default function Learn({ gainXp, setLevel }: Props) {
   const [view, setView] = useState<View>({ t: 'menu' });
-  const [course, setCourse] = useState(false);
   const [facets, setFacets] = useState<Map<string, FacetRec>>(new Map());
   const [done, setDone] = useState<Set<string>>(new Set());
   const refresh = useCallback(async () => {
@@ -34,7 +32,6 @@ export default function Learn({ gainXp, setLevel }: Props) {
   const startDrill = () => setView({ t: 'drill', ex: buildWordSession(facets, 12).ex });
   const onAnswer = recordAnswer;
 
-  if (course) return <Course done={done} onBack={() => setCourse(false)} />;
   if (view.t === 'drill') return <Practice title="Woorden" exercises={view.ex} onAnswer={onAnswer} onExit={() => { refresh(); setView({ t: 'menu' }); }}
     onDone={(s, t, w) => { gainXp(s * 10); refresh(); setView({ t: 'result', title: 'Woordtrainer klaar', score: s, total: t, wrong: w, msg: 'Woorden die je fout had, komen snel terug. Zo onthoud je ze beter.' }); }} />;
   if (view.t === 'place') return <Practice title="Instaptoets" exercises={PLACEMENT} showFeedback={false} onExit={() => setView({ t: 'menu' })}
@@ -67,7 +64,6 @@ export default function Learn({ gainXp, setLevel }: Props) {
           <strong>{done.has(l.id) ? '✅ ' : open ? '' : '🔒 '}{l.title}</strong><span className="muted">{l.level} · {open ? l.objective : 'Rond eerst de vorige les af.'}</span></button>; })}
       <h3>Instaptoets</h3>
       <div className="card"><p>10 korte vragen om te schatten waar je begint. Je mag ook gewoon bij A0 starten.</p><button className="chip" onClick={() => setView({ t: 'place' })}>Start instaptoets</button></div>
-      <div className="card"><strong>Cursusoverzicht A1–B2</strong><p>Bekijk de units, doelen en wat al beschikbaar is.</p><button className="chip" onClick={() => setCourse(true)}>Bekijk de cursus</button></div>
       <div className="card"><strong>Luisteren</strong><p>Hoor een woord of zin in het Duits en kies de juiste betekenis. Gebruikt de stem van je toestel.</p>
         {speechOk ? <button className="chip" onClick={() => setView({ t: 'drill', ex: listenSession(facets, 10) })}>Start luisteroefening</button> : <span className="muted">Spraak wordt op dit apparaat niet ondersteund.</span>}</div>
       <ReportsCard />

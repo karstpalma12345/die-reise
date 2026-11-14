@@ -1,0 +1,19 @@
+// Vereenvoudigde, getekende geografie voor de kaart (geen kaartnauwkeurigheid: storybook-stijl). Punten zijn [breedtegraad, lengtegraad].
+export interface Geo { lon0: number; lon1: number; lat0: number; lat1: number; kx: number; s: number; W: number; H: number }
+export const makeGeo = (lon0: number, lon1: number, lat0: number, lat1: number): Geo => { const kx = Math.cos(((lat0 + lat1) / 2) * Math.PI / 180); const W = 800; const s = W / ((lon1 - lon0) * kx); return { lon0, lon1, lat0, lat1, kx, s, W, H: Math.round((lat1 - lat0) * s) }; };
+export const project = (g: Geo, lat: number, lon: number): [number, number] => [(lon - g.lon0) * g.kx * g.s, (g.lat1 - lat) * g.s];
+export const GEO = { A1: makeGeo(6.0, 6.95, 51.78, 52.16), A2: makeGeo(5.4, 15.0, 47.2, 54.2) };
+export const rng = (seed: number) => () => { seed |= 0; seed = (seed + 0x6d2b79f5) | 0; let t = Math.imul(seed ^ (seed >>> 15), 1 | seed); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+// Pad door punten met zachte, "met de hand getekende" bogen (vast patroon via zaadje: licht voor de telefoon)
+export function wob(pts: number[][], amp: number, seed: number, close = false): string {
+  const r = rng(seed); const f = (n: number) => n.toFixed(1); const p = close ? [...pts, pts[0]] : pts; let d = `M${f(p[0][0])} ${f(p[0][1])}`;
+  for (let i = 1; i < p.length; i++) { const [x0, y0] = p[i - 1], [x1, y1] = p[i]; d += `Q${f((x0 + x1) / 2 + (r() - 0.5) * amp)} ${f((y0 + y1) / 2 + (r() - 0.5) * amp)} ${f(x1)} ${f(y1)}`; }
+  return d + (close ? 'Z' : '');
+}
+export const inside = (lat: number, lon: number, poly: number[][]) => { let c = false; for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) { const [yi, xi] = poly[i], [yj, xj] = poly[j]; if ((yi > lat) !== (yj > lat) && lon < ((xj - xi) * (lat - yi)) / (yj - yi) + xi) c = !c; } return c; };
+export const DE = [[50.75, 6.02], [51.05, 5.88], [51.34, 6.18], [51.78, 5.97], [51.97, 6.75], [52.22, 7.07], [52.80, 7.07], [53.20, 7.20], [53.35, 7.22], [53.52, 8.10], [53.85, 8.70], [54.00, 8.85], [54.50, 8.80], [54.90, 8.65], [54.90, 9.60], [54.45, 10.20], [54.45, 11.10], [54.20, 12.10], [54.45, 12.90], [54.65, 13.40], [54.05, 13.90], [53.95, 14.25], [53.50, 14.30], [52.90, 14.30], [52.35, 14.60], [51.60, 15.00], [51.05, 14.95], [50.85, 14.30], [50.65, 13.60], [50.35, 12.60], [50.25, 12.15], [49.55, 12.65], [49.05, 13.20], [48.55, 13.85], [48.00, 12.95], [47.55, 13.05], [47.55, 12.17], [47.45, 11.00], [47.40, 10.28], [47.55, 9.60], [47.66, 9.17], [47.60, 7.60], [48.00, 7.55], [48.75, 8.20], [49.05, 8.20], [49.15, 7.05], [49.45, 6.35], [49.80, 6.40], [50.35, 6.10]];
+export const NL = [[51.40, 3.50], [51.95, 4.10], [52.40, 4.55], [52.95, 4.80], [53.20, 5.40], [53.40, 6.20], [53.35, 7.22], [53.20, 7.20], [52.80, 7.07], [52.22, 7.07], [51.97, 6.75], [51.78, 5.97], [51.34, 6.18], [51.05, 5.88], [50.75, 6.02], [50.77, 5.70], [51.20, 5.55], [51.45, 5.20], [51.43, 4.25]];
+const COAST = [[51.1, 2.5], [51.40, 3.50], [51.95, 4.10], [52.40, 4.55], [52.95, 4.80], [53.20, 5.40], [53.40, 6.20], [53.35, 7.20], [53.52, 8.10], [53.85, 8.70], [54.00, 8.85], [54.50, 8.80], [54.90, 8.65], [54.90, 9.60], [54.45, 10.20], [54.45, 11.10], [54.20, 12.10], [54.45, 12.90], [54.65, 13.40], [54.05, 13.90], [53.95, 14.25], [54.20, 15.20]];
+export const MAINLAND = [...COAST, [47.0, 15.2], [47.0, 2.0]];
+export const RIVERS = [[[47.60, 7.60], [48.5, 7.8], [49.0, 8.3], [50.0, 7.6], [50.9, 7.0], [51.8, 6.1], [51.9, 5.3]], [[50.9, 14.2], [51.05, 13.7], [52.0, 12.2], [53.0, 11.0], [53.5, 9.6], [53.9, 8.9]], [[48.4, 9.8], [48.8, 11.5], [48.6, 13.4]], [[51.5, 9.4], [52.5, 9.2], [53.2, 8.7]]];
+export const CITIES: [string, number, number][] = [['Hamburg', 53.55, 9.99], ['Keulen', 50.94, 6.96], ['Frankfurt', 50.11, 8.68], ['Hannover', 52.37, 9.73], ['Leipzig', 51.34, 12.37], ['Stuttgart', 48.78, 9.18]];

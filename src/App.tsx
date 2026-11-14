@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import Home from './screens/Home';
 import Soon from './screens/Soon';
 import Learn from './screens/Learn';
-import Journey from './screens/Journey';
+import World from './screens/World';
 import Progress from './screens/Progress';
 import { loadProfile, defaultProfile, addXp, type Profile, type Level } from './profile';
 import { requestPersistence, put } from './db';
@@ -18,6 +18,7 @@ export default function App() {
   const [tab, setTab] = useState<Tab>('home');
   const [profile, setProfile] = useState<Profile>(defaultProfile());
   const [error, setError] = useState('');
+  const [auto, setAuto] = useState(false);
   const [upd, setUpd] = useState<ServiceWorker | null>(null);
   const [online, setOnline] = useState(navigator.onLine);
   useEffect(() => { registerSW(setUpd); const on = () => setOnline(true), off = () => setOnline(false); window.addEventListener('online', on); window.addEventListener('offline', off); return () => { window.removeEventListener('online', on); window.removeEventListener('offline', off); }; }, []);
@@ -33,8 +34,8 @@ export default function App() {
       {upd && <div className="update">Er is een nieuwe versie beschikbaar. <button className="chip" onClick={() => applyUpdate(upd)}>Vernieuwen</button></div>}
       {!online && <div className="offline">Offline: je kunt gewoon verder oefenen. Je voortgang blijft op je toestel bewaard.</div>}
       <main>
-        {tab === 'home' && <Home profile={profile} go={setTab} />}
-        {tab === 'journey' && <Journey gainXp={gainXp} onExit={() => setTab('home')} />}
+        {tab === 'home' && <Home profile={profile} go={setTab} start={() => { setAuto(true); setTab('journey'); }} />}
+        {tab === 'journey' && <World gainXp={gainXp} auto={auto} onAutoUsed={() => setAuto(false)} />}
         {tab === 'practice' && <Learn gainXp={gainXp} setLevel={setLevel} />}
         {tab === 'progress' && <Progress />}
       </main>

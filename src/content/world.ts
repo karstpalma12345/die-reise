@@ -13,11 +13,13 @@ export const REGIONS: Record<Level, { title: string; blurb: string }> = {
 // A1: fictieve plekken tussen de vijver in de Achterhoek en de grens bij Borken
 const A1 = [['De vijver', 'pond'], ['Het dorp', 'village'], ['Het familiehuis', 'house'], ['Het café', 'cafe'], ['Carla’s huis', 'home'], ['Het dorpsplein', 'square'], ['Het station', 'station'], ['De dokter', 'clinic'], ['Het kantoor', 'office'], ['De markt', 'market'], ['Het sportveld', 'sports'], ['De grens', 'border']];
 const a1 = A1.map(([name, mark], i) => u(`A1-${String(i + 1).padStart(2, '0')}`, name, 'Nederland', +(52.06 - 0.16 * (i / 11) + 0.025 * Math.sin(i * 1.7)).toFixed(3), +(6.2 + 0.6 * (i / 11)).toFixed(3), mark));
+// Berlijn: de vijf wijken staan uitvergroot rond het centrum (kaartkunst), zodat je ze op de kaart kunt aantikken.
+const berlin = (i: number): [number, number] => { const a = (-90 + i * 72) * Math.PI / 180; return [+(52.52 + 0.34 * Math.sin(a)).toFixed(3), +(13.4 + 0.55 * Math.cos(a)).toFixed(3)]; };
 export const WORLD: WorldStop[] = [
   ...a1,
   u('A2-01', 'Borken', 'Duitsland', 51.844, 6.858, 'town'), wp('wp-essen', 'Essen', 'Duitsland', 51.457, 7.012, 'mine', 'A2'), wp('wp-bremen', 'Bremen', 'Duitsland', 53.079, 8.802, 'musicians', 'A2'),
-  u('A2-02', 'Berlijn – het station', 'Duitsland', 52.525, 13.369, 'berlin-station'), u('A2-03', 'Berlijn – de praktijk', 'Duitsland', 52.50, 13.33, 'clinic'), u('A2-04', 'Berlijn – de woning', 'Duitsland', 52.49, 13.43, 'home'),
-  u('A2-05', 'Berlijn – het kantoor', 'Duitsland', 52.53, 13.41, 'office'), u('A2-06', 'Berlijn – het park', 'Duitsland', 52.51, 13.35, 'park'), u('A2-07', 'Dresden', 'Duitsland', 51.050, 13.738, 'dresden'), u('A2-08', 'München', 'Duitsland', 48.137, 11.575, 'munich'),
+  u('A2-02', 'Berlijn – het station', 'Duitsland', ...berlin(0), 'berlin-station'), u('A2-03', 'Berlijn – de praktijk', 'Duitsland', ...berlin(1), 'clinic'), u('A2-04', 'Berlijn – de woning', 'Duitsland', ...berlin(2), 'home'),
+  u('A2-05', 'Berlijn – het kantoor', 'Duitsland', ...berlin(3), 'office'), u('A2-06', 'Berlijn – het park', 'Duitsland', ...berlin(4), 'park'), u('A2-07', 'Dresden', 'Duitsland', 51.050, 13.738, 'dresden'), u('A2-08', 'München', 'Duitsland', 48.137, 11.575, 'munich'),
   u('B1-01', 'Wenen', 'Oostenrijk', 48.208, 16.373, 'wheel'), u('B1-02', 'Salzburg', 'Oostenrijk', 47.800, 13.044, 'fortress'), u('B1-03', 'Zürich', 'Zwitserland', 47.377, 8.541, 'lake'), u('B1-04', 'Praag', 'Tsjechië', 50.075, 14.438, 'bridge'),
   u('B1-05', 'Barcelona', 'Spanje', 41.385, 2.173, 'sagrada'), u('B1-06', 'Rome', 'Italië', 41.903, 12.496, 'colosseum'), u('B1-07', 'Parijs', 'Frankrijk', 48.857, 2.352, 'eiffel'), u('B1-08', 'Londen', 'Verenigd Koninkrijk', 51.507, -0.128, 'bigben'),
   // B2 is voorlopig: Chicago, Thailand en Australië staan vast; de rest werken we later uit met het verhaal.

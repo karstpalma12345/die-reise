@@ -6,7 +6,7 @@ import Pond from '../components/Pond';
 import type { Profile } from '../profile';
 import type { Tab } from '../App';
 
-export default function Home({ profile, go }: { profile: Profile; go: (t: Tab) => void }) {
+export default function Home({ profile, go, start }: { profile: Profile; go: (t: Tab) => void; start: () => void }) {
   const [j, setJ] = useState<Journey | null>(null);
   const reload = () => { loadJourney().then(setJ); };
   useEffect(() => { reload(); }, []);
@@ -17,7 +17,7 @@ export default function Home({ profile, go }: { profile: Profile; go: (t: Tab) =
       {back && <div className="welcome"><Carla size={52} mood="cheer" /><div><b>„Schön, dich wiederzusehen!“</b><br /><span className="muted">Fijn je weer te zien! Carla heeft je gemist.</span></div></div>}
       <Arrival stops={j?.newStops ?? []} onDone={reload} />
       <section className="hero"><Pond /><h1>Die Reise</h1><p className="sub">Karst &amp; Carla – Eine gemeinsame Reise zur deutschen Sprache.</p><Duo size={128} mood={back ? 'cheer' : 'happy'} /></section>
-      <button className="primary big" onClick={() => go('journey')}>Verder met je reis</button>
+      <button className="primary big" onClick={start}>Verder met je reis</button>
       <div className="panel">
         {j?.current && <div><div className="row small"><span>Volgende stop: <b>{j.current.place}</b></span><span>{Math.round(j.current.progress * 100)}%</span></div>
           <div className="bar" role="progressbar" aria-valuenow={Math.round(j.current.progress * 100)} aria-valuemin={0} aria-valuemax={100}><i style={{ width: j.current.progress * 100 + '%' }} /></div>
